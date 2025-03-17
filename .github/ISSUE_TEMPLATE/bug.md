@@ -22,7 +22,6 @@ assignees: maylanix
 > 3. etc...
 
 > [!NOTE]
-> **Notes:**
 > [Any additional notes you may have.]
 
 If applicable, add screenshots/videos to help explain your issue.
