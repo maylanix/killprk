@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea
 title: "[Feature Request] Short description of your feature"
-labels: ''
+labels: feature request
 assignees: maylanix
 
 ---
