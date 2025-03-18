@@ -670,7 +670,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 				Call Subroutine(CreateNewEffect);
 				Small Message(All Players(All Teams), Custom String("   New cloud created"));
 			End;
-			Play Effect(Event Player, Buff Impact Sound, Null, Event Player, 100);
+			Play Effect(Event Player, Buff Impact Sound, Null, Event Player.editMode != 7 ? Event Player : Null, 100);
 		Else If(Weapon(Event Player) == 2);
 			If(Event Player.editMode == 1);
 				Call Subroutine(ErrorWarningMsg);
@@ -748,7 +748,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 				Call Subroutine(GetCurrentCheckpoint);
 				Small Message(All Players(All Teams), Custom String("   The selected cloud has been deleted"));
 			End;
-			Play Effect(Event Player, Debuff Impact Sound, Null, Event Player, 100);
+			Play Effect(Event Player, Debuff Impact Sound, Null, Event Player.editMode != 7 ? Event Player : Null, 100);
 		End;
 	}
 }
@@ -1140,7 +1140,15 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 				Call Subroutine(GetCurrentCheckpoint);
 				Wait(0.100, Ignore Condition);
 				Small Message(All Players(All Teams), Custom String("   Selected level GA has been set to {0}", Event Player.checkpointA[4] ? Custom String("Infinite uses") : Custom String("Single use")));
-				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);			
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
+			Else If(Is Button Held(Event Player, Button(Reload)));
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
+					Current Array Index == 10 ? !Current Array Element : Current Array Element);
+				Call Subroutine(GetCurrentCheckpoint);
+				Wait(0.100, Ignore Condition);
+	    		Small Message(All Players(All Teams), Custom String("   {0} landing on next checkpoint during resurrection", Event Player.checkpointA[10] ? Custom String(
+					"Enabled") : Custom String("Disabled")));	
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);		
 			End;
 		End;
 	}
