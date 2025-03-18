@@ -3245,6 +3245,11 @@ rule("Subroutine ErrorWarningmsgs")
 				Small Message(Event Player, Custom String("   Target ally not created in current orb"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 				Global.Error = True;
+			Else If(Event Player.editMode == 7 && (!Event Player.checkpointA[3][1] || !Event Player.checkpointA[3][0]));
+				Small Message(Event Player, !Event Player.checkpointA[3][0] ? Custom String("   Target ally not created in current level") : 
+					Custom String("   The current level's target ally is not set to be resurrected"));
+				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
+				Global.Error = True;
 			End;
 		Else If(Is Button Held(Event Player, Button(Ability 1)));
 			If(Event Player.editMode == 1 && !Event Player.checkpointA[3][1] && (Weapon(Event Player) == 1));
