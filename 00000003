@@ -3829,12 +3829,10 @@ rule("Subroutine CreateGlobalHUD")
 		Else;
 			Create HUD Text(Host Player, Null, Array(Custom String(""), Custom String(
 				"Create Point | Interact + Primary Fire\nInsert Point | Interact + Melee{0}", Custom String(
-				"\nSelect Point | Rez + Primary / Secondary Fire\nMove Point | Interact + Rez\nSwitch Crouch | Interact + Crouch{0}",
-				Custom String("\nSet Unlimited Ga | Interact + Ultimate\nSwitch Teleport | Interact + Jump{0}", Custom String(
-				"\nResurrect Bot | Interact + Reload{0}",
-				Custom String("\nDelete Point | Interact + Secondary Fire [GUN]{0}",
+				"\nSelect Point | Rez + Primary / Secondary Fire\nMove Point | Interact + Rez{0}",
+				Custom String("\nResurrect Bot | Interact + Reload{0}", Custom String("\nDelete Point | Interact + Secondary Fire [GUN]{0}",
 				Array Contains(Array(Map(Busan), Map(Ilios), Map(Lijiang Tower), Map(Lijiang Tower), Map(Nepal), Map(Oasis)), Current Map)
-				? Custom String("\nTeleport Other Map | Hold Interact") : Custom String("")))))), Custom String(
+				? Custom String("\nTeleport Other Map | Hold Interact") : Custom String(""))))), Custom String(
 				"Create Orb | Interact + Primary Fire\nSelect Orb | Rez + Primary / Secondary Fire {0}", Custom String(
 				"\nMove Position | Reload + Primary / Secondary Fire\nCreate Bot | Melee + Primary Fire\nDelete Bot | Melee + Secondary Fire{0}",
 				Custom String("\nResurrect Bot | Interact + Melee{0}", Custom String("\nDelete Orb | Interact + Secondary Fire [GUN]")))),
@@ -3848,14 +3846,17 @@ rule("Subroutine CreateGlobalHUD")
                 Custom String("\nRestart: Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
                 : Custom String("Ultimate"))), Custom String("Create Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
                 Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nResurrect Bot | Interact + Reload"))))[Host Player.editMode], 
+                Custom String("\nResurrect Bot | Interact + Reload"))), Custom String("REZ on goal | Interact + Reload\nBot crouching | Interact + Ability 1{0}",
+				Custom String("\nFree walking | Interact + Resurrect\nSwitch Crouch | Interact + Crouch{0}", 
+				Custom String("\nUnlimited Ga | Interact + Ultimate\nSwitch Teleport | Interact + Jump{0}", 
+				Custom String("\nAdjust Radius | Jump + Melee + Prim. / Secon. Fire [GUN]")))))[Host Player.editMode], 
                 Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"),
 				Left, 101, Null, Color(Rose), Null, Visible To Sort Order String and Color, Default Visibility);
             Create HUD Text(Host Player, Null, Array(Custom String(""), Custom String("CONTROLS:{0}", Custom String("\nCreate Bot | Melee + Primary Fire [STAFF]\nDelete Bot | Melee + Secondary Fire [STAFF]{0}", 
                 Custom String("\nCreate Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
                 Custom String("\nRefresh GA after REZ | Interact + Ability 1 [STAFF]\nRefresh GA after KILL | Interact + Ability 1 [GUN]{0}", 
                 Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nExtra options mode | Crouch + Jump [STAFF]\nKill Bot Refresh Mode | Crouch + Jump [GUN]{0}", Custom String("\nAdjust Radius | Jump + Melee + Prim. / Secon. Fire [GUN]"))))))), 
+                Custom String("\nExtra options mode | Crouch + Jump [STAFF]\nKill Bot Refresh Mode | Crouch + Jump [GUN]{0}")))))), 
                 Custom String("CONTROLS:\nRefresh GA after REZ | Interact + Ability 1"), Custom String("CONTROLS:\nAdjust Radius | Jump + Melee + Primary / Secondary Fire"), 
                 Custom String("CONTROLS:\nAdjust Level | Jump + Melee + Primary / Secondary Fire"), Custom String("PLAY MODE"), Custom String("REFRESH SECTION{0}",
 				Custom String("\nCheckpoint mode | Crouch + Jump [GUN]\nExtra options mode | Crouch + Jump [STAFF]")),
