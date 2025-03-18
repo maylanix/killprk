@@ -568,7 +568,7 @@ rule("Switch Edit Mode")
 		Global.EditMode == True;
 		Event Player == Host Player;
 		Is Button Held(Event Player, Button(Interact)) == True;
-		Event Player.editMode != 6;
+		Event Player.editMode < 6;
 	}
 
 	actions
@@ -1019,7 +1019,7 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 	conditions
 	{
 		Global.EditMode == True;
-		(Event Player.editMode < 3 || Event Player.editMode == 6) == True;
+		(Event Player.editMode < 3 || Event Player.editMode >= 6) == True;
 		Event Player == Host Player;
 		Is Button Held(Event Player, Button(Interact)) == True;
 		(Is Button Held(Event Player, Button(Crouch)) || Is Button Held(Event Player, Button(Jump)) || Is Button Held(Event Player, Button(
@@ -1036,29 +1036,7 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 			Abort;
 		End;
 		If(Event Player.editMode == 1);
-			If(Is Button Held(Event Player, Button(Crouch)));
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 2 ? !Current Array Element : Current Array Element);
-				Call Subroutine(GetCurrentCheckpoint);
-				Set Crouch Enabled(Event Player, Event Player.checkpointA[2]);
-				Call Subroutine(TeleportCurrentBot);
-				Wait(0.100, Ignore Condition);
-				Small Message(All Players(All Teams), Custom String("   {0} crouch", Event Player.checkpointA[2] ? Custom String(
-					"Enabled") : Custom String("Disabled")));
-			Else If(Is Button Held(Event Player, Button(Jump)));
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 5 ? !Current Array Element : Current Array Element);
-				Call Subroutine(GetCurrentCheckpoint);
-				Wait(0.100, Ignore Condition);
-				Small Message(All Players(All Teams), Custom String("   Selected level teleport {0}", Event Player.checkpointA[5] ? Custom String(
-					"Enabled ( Official game takes effect )") : Custom String("Disabled")));
-			Else If(Is Button Held(Event Player, Button(Ultimate)));
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 4 ? !Current Array Element : Current Array Element);
-				Call Subroutine(GetCurrentCheckpoint);
-				Wait(0.100, Ignore Condition);
-				Small Message(All Players(All Teams), Custom String("   Selected level GA has been set to {0}", Event Player.checkpointA[4] ? Custom String("Infinite uses") : Custom String("Single use")));
-			Else If(Is Button Held(Event Player, Button(Reload)));
+			If(Is Button Held(Event Player, Button(Reload)));
 				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 3 ? Array(
 					Current Array Element[0], !Current Array Element[1], Current Array Element[2]) : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
@@ -1069,6 +1047,7 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 				Small Message(All Players(All Teams), Event Player.checkpointA[3][1] ? Custom String(
 					"   Enabled resurrection")
 					: Custom String("   Disabled resurrection"));
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 			Else If(Is Button Held(Event Player, Button(Ability 1)) && (Weapon(Event Player) == 1));
 				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 3 ? Array(
 					Current Array Element[0], Current Array Element[1], !Current Array Element[2]) : Current Array Element);
@@ -1077,6 +1056,7 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 				Small Message(All Players(All Teams), Event Player.checkpointA[3][2] ? Custom String(
 					"   Enabled GA refresh for this resurrection") : Custom String(
 					"   Disabled GA refresh for this resurrection"));
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
             Else If(Is Button Held(Event Player, Button(Ability 1)) && (Weapon(Event Player) == 2));
                 Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(
 					Current Array Element[0], !Current Array Element[1], Current Array Element[2], Current Array Element[3], Current Array Element[4]) : Current Array Element);
@@ -1085,8 +1065,8 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 				Small Message(All Players(All Teams), Event Player.checkpointA[9][1] ? Custom String(
 					"   Enabled GA refresh for this kill") : Custom String(
 					"   Disabled GA refresh for this kill"));
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 			End;
-			Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 		Else If(Event Player.editMode == 2);
 			If(Is Button Held(Event Player, Button(Reload)));
 				Event Player.currentOrb[Global.CurrentChooseOrb] = Mapped Array(Event Player.currentOrb[Global.CurrentChooseOrb],
@@ -1135,11 +1115,38 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 					"   Enabled GA refresh for this resurrection") : Custom String(
 					"   Disabled GA refresh for this resurrection"));
 			End;
+		Else If(Event Player.editMode == 7);
+			If(Is Button Held(Event Player, Button(Crouch)));
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
+					Current Array Index == 2 ? !Current Array Element : Current Array Element);
+				Call Subroutine(GetCurrentCheckpoint);
+				Set Crouch Enabled(Event Player, Event Player.checkpointA[2]);
+				Call Subroutine(TeleportCurrentBot);
+				Wait(0.100, Ignore Condition);
+				Small Message(All Players(All Teams), Custom String("   {0} crouch", Event Player.checkpointA[2] ? Custom String(
+					"Enabled") : Custom String("Disabled")));
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
+			Else If(Is Button Held(Event Player, Button(Jump)));
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
+					Current Array Index == 5 ? !Current Array Element : Current Array Element);
+				Call Subroutine(GetCurrentCheckpoint);
+				Wait(0.100, Ignore Condition);
+				Small Message(All Players(All Teams), Custom String("   Selected level teleport {0}", Event Player.checkpointA[5] ? Custom String(
+					"Enabled ( Official game takes effect )") : Custom String("Disabled")));
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
+			Else If(Is Button Held(Event Player, Button(Ultimate)));
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
+					Current Array Index == 4 ? !Current Array Element : Current Array Element);
+				Call Subroutine(GetCurrentCheckpoint);
+				Wait(0.100, Ignore Condition);
+				Small Message(All Players(All Teams), Custom String("   Selected level GA has been set to {0}", Event Player.checkpointA[4] ? Custom String("Infinite uses") : Custom String("Single use")));
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);			
+			End;
 		End;
 	}
 }
 
-rule("switch rez on checkpoint + switch refresh section - maylanix ^-^")
+rule("switch extra section + switch refresh section + swap back - maylanix ^-^")
 {
 	event
 	{
@@ -1150,8 +1157,7 @@ rule("switch rez on checkpoint + switch refresh section - maylanix ^-^")
 
 	conditions
 	{
-		Global.EditMode == True;
-		(Event Player.editMode == 1 || Event Player.editMode == 6) == True;
+		(Event Player.editMode == 1 || Event Player.editMode == 6 || Event Player.editMode == 7) == True;
 		Event Player == Host Player;
 		Is Button Held(Event Player, Button(Crouch)) == True;
         Is Button Held(Event Player, Button(Jump)) == True;
@@ -1166,24 +1172,28 @@ rule("switch rez on checkpoint + switch refresh section - maylanix ^-^")
 			Global.Error = False;
 			Abort;
 		End;
-		If(Weapon(Event Player) == 1);
-			Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-				Current Array Index == 10 ? !Current Array Element : Current Array Element);
-			Call Subroutine(GetCurrentCheckpoint);
-			Wait(0.100, Ignore Condition);
-	    	Small Message(All Players(All Teams), Custom String("   {0} landing on next checkpoint during resurrection", Event Player.checkpointA[10] ? Custom String(
-				"Enabled") : Custom String("Disabled")));
-		Else If(Event Player.editMode == 1);
-			Event Player.editMode = 6;
-			Call Subroutine(TeleportBotTokillRefreshPosition);
-			If(Event Player.checkpointA[9][3]);
-				Kill(Event Player.targetBot, Null);
-			End;
-		Else If(Event Player.editMode == 6);
-			Event Player.editMode = 1;
-			Call Subroutine(TeleportCurrentBot);
-		End;
-		Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
+        If(Weapon(Event Player) == 1);
+            If(Event Player.editMode == 7);
+                Event Player.editMode = 1;
+            Else;
+                Event Player.editMode = 7;
+            End;
+            Call Subroutine(TeleportCurrentBot);
+        Else;
+            If(Event Player.editMode == 6);
+                Event Player.editMode = 1;
+                Call Subroutine(TeleportCurrentBot);
+            Else;
+                Event Player.editMode = 6;
+                Call Subroutine(TeleportBotTokillRefreshPosition);
+			    If(!Event Player.checkpointA[9][3]);
+				    Resurrect(Event Player.targetBot);
+			    End;
+            End;
+        End;
+		Small Message(All Players(All Teams), Custom String("   current mode: {0} mode", Array(Null, Custom String("Checkpoint"), Custom String(
+				"Orb"), Custom String("Sphere"), Custom String("Cloud"), Custom String("Play"), Custom String("Refresh"), Custom String("Extra Options"))[Event Player.editMode]));
+        Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 	}
 }
 
@@ -3428,8 +3438,8 @@ rule("Subroutine  TeleportBotTokillRefreshPosition")
 	{
 		Teleport(Event Player.targetBot, Event Player.checkpointA[9][2] ? Event Player.checkpointA[9][2] : Nearest Walkable Position(Vector(-500,
 			    -500, -500)));
-		If(!Event Player.checkpoint[9][3]);
-			Resurrect(Event Player.targetBot);
+		If(Event Player.checkpoint[9][3]);
+			Kill(Event Player.targetBot, Null);
 		End;
 		Event Player.aura = False;
 	}
@@ -3830,21 +3840,23 @@ rule("Subroutine CreateGlobalHUD")
                 Custom String("\nRestart: Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
                 : Custom String("Ultimate"))), Custom String("Create Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
                 Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nResurrect Bot | Interact + Reload\nREZ on goal checkpoint | Crouch + Jump [STAFF]"))))[Host Player.editMode], 
+                Custom String("\nResurrect Bot | Interact + Reload"))))[Host Player.editMode], 
                 Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"),
 				Left, 101, Null, Color(Rose), Null, Visible To Sort Order String and Color, Default Visibility);
             Create HUD Text(Host Player, Null, Array(Custom String(""), Custom String("CONTROLS:{0}", Custom String("\nCreate Bot | Melee + Primary Fire [STAFF]\nDelete Bot | Melee + Secondary Fire [STAFF]{0}", 
                 Custom String("\nCreate Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
                 Custom String("\nRefresh GA after REZ | Interact + Ability 1 [STAFF]\nRefresh GA after KILL | Interact + Ability 1 [GUN]{0}", 
                 Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nREZ on goal checkpoint | Crouch + Jump [STAFF]\nSwap Refresh Mode | Crouch + Jump [GUN]{0}", Custom String("\nAdjust Radius | Jump + Melee + Prim. / Secon. Fire [GUN]"))))))), 
+                Custom String("\nExtra options mode | Crouch + Jump [STAFF]\nKill Bot Refresh Mode | Crouch + Jump [GUN]{0}", Custom String("\nAdjust Radius | Jump + Melee + Prim. / Secon. Fire [GUN]"))))))), 
                 Custom String("CONTROLS:\nRefresh GA after REZ | Interact + Ability 1"), Custom String("CONTROLS:\nAdjust Radius | Jump + Melee + Primary / Secondary Fire"), 
-                Custom String("CONTROLS:\nAdjust Level | Jump + Melee + Primary / Secondary Fire"), Custom String("PLAY MODE"), Custom String("REFRESH SECTION"))[Host Player.editMode], 
+                Custom String("CONTROLS:\nAdjust Level | Jump + Melee + Primary / Secondary Fire"), Custom String("PLAY MODE"), Custom String("REFRESH SECTION{0}",
+				Custom String("\nCheckpoint mode | Crouch + Jump [GUN]\nExtra options mode | Crouch + Jump [STAFF]")),
+				Custom String("EXTRA OPTIONS{0}", Custom String("\nCheckpoint mode | Crouch + Jump [STAFF]\nKill Bot Refresh mode | Crouch + Jump [GUN]")))[Host Player.editMode], 
 				Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), 
                 Left, 100, Null, Color(Sky Blue), Null, Visible To Sort Order String and Color, Default Visibility);
 			Create HUD Text(Host Player, Null, Custom String("Current Mode | {0} {1} \nExport data | {2}", Array(
-				Custom String(""), Custom String("Checkpoint"), Custom String("Orb"), Custom String("Sphere"), Custom String("Cloud"), Custom String("Play"), Custom String("Refresh"))
-				[Host Player.editMode], Host Player.editMode == 6 ? Custom String("({0} + {1} [GUN] to Switch)", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump))) : 
+				Custom String(""), Custom String("Checkpoint"), Custom String("Orb"), Custom String("Sphere"), Custom String("Cloud"), Custom String("Play"), Custom String("Refresh"), Custom String("Extra Options"))
+				[Host Player.editMode], Host Player.editMode >= 6 ? Custom String("({0} + {1} to Switch)", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump))) : 
 				Custom String("(Double click {0} to Switch)", Input Binding String(Button(Interact))), Custom String("Hold {0} + {1} + S", Input Binding String(
 				Button(Crouch)), Input Binding String(Button(Ability 1)))), Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), Left, 102, Null,
 				Custom Color(205, 209, 211, 255), Null, Visible To Sort Order String and Color, Default Visibility);
