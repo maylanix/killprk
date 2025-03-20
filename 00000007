@@ -768,7 +768,7 @@ rule("Move checkpoint")
 		Global.EditMode == True;
 		Count Of(Global.Checkpoint) > 0;
 		Event Player == Host Player;
-		Event Player.editMode == 1;
+		(Event Player.editMode == 1 || Event Player.editMode == 7) == True;
 		Is Button Held(Event Player, Button(Ability 2)) == True;
 		Is Button Held(Event Player, Button(Interact)) == True;
 	}
@@ -777,10 +777,16 @@ rule("Move checkpoint")
 	{
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Interact), Button(Ability 2))), Is Button Held(
 			Event Player, Current Array Element)));
-		Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 0 ? Position Of(
-			Event Player) : Current Array Element);
-		Call Subroutine(GetCurrentCheckpoint);
-		Small Message(All Players(All Teams), Custom String("   Moved checkpoint to player position"));
+		If(Event Player.editMode == 1);
+			Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 0 ? Position Of(
+				Event Player) : Current Array Element);
+			Call Subroutine(GetCurrentCheckpoint);
+			Small Message(All Players(All Teams), Custom String("   Moved checkpoint to player position"));
+		Else;
+			Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 11 ? !Event Player.checkpointA[11] : Current Array Element);
+			Call Subroutine(GetCurrentCheckpoint);
+			Small Message(All Players(All Teams), Custom String("   {0} free walking for this checkpoint", Event Player.checkpointA[11] ? Custom String("Enabled") : Custom String("Disabled")));
+		End;
 		Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 	}
 }
