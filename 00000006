@@ -119,6 +119,7 @@ variables
 		27: NumberOfUsedEntity
 		28: Vips
 		29: rezrefresh
+		30: freewalk
 		31: PlayersRecord
 		32: PlayersData
 		33: Top5
@@ -614,7 +615,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 				"0, checkponit position\n1, checkpoint radius\n2, crouch\n3, bot, default empty array(BotVector, NeedResurrect, RefreshAbility1)\n4, unlimited ga\n5, teleport, defalut false\n6, orb, default empty array\n7, sphere, default empty array\n8, cloud, default empty array"
 				Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint);
+			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk);
                 "9, enemy bot, default empty array(botvector, refreshability1 on kill, refresh vector)"
 				Event Player.checkpoint = Count Of(Global.Checkpoint) - 1;
 				Call Subroutine(GetCurrentCheckpoint);
@@ -811,7 +812,7 @@ rule("Insert point")
 		Global.Checkpoint = Array Slice(Global.Checkpoint, 0, Event Player.checkpoint + 1);
 		Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint);
+			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk);
 		Modify Global Variable(Checkpoint, Append To Array, Global.TempArray);
 		Event Player.checkpoint += 1;
 		Call Subroutine(GetCurrentCheckpoint);
@@ -1734,11 +1735,11 @@ rule("back point after landing")
 	{
 		Event Player.finished == False;
 		Event Player.freeMode == False;
+		Event Player.checkpointA[11] == False;
 		Is On Ground(Event Player) == True;
 		Is Dummy Bot(Event Player) == False;
 		Distance Between(Event Player, Event Player.checkpointA[0]) > Event Player.checkpointA[1];
 		Distance Between(Event Player, Event Player.checkpointB[0]) > Event Player.checkpointB[1];
-		Array Contains(Array(-1, -1, -1), Event Player.checkpoint) == False;
 	}
 
 	actions
@@ -3484,6 +3485,7 @@ rule("Subroutine ClearRedundantData")
 		Global.PlayersData = Null;
 		Global.BigMsgs = Null;
 		Global.rezonpoint = Null;
+		Global.freewalk = Null;
 		Global.bkey = Null;
 		Global.rkey = Null;
 		Global.Tips = Null;
@@ -3541,6 +3543,8 @@ rule("Subroutine  InitializeGlobalVariables")
     	Global.rezonpoint = Workshop Setting Toggle(Custom String("◐ Extra game settings"), Custom String("Allow resurrect on goal checkpoint"), False, 1);
 		"default orb look"
 		Global.defaultorb = Workshop Setting Combo(Custom String("◐ Extra game settings"), Custom String("Orb style"), 0, Array(Custom String("orb"), Custom String("sphere")), 2);
+		"default free walk"
+		Global.freewalk = Workshop Setting Toggle(Custom String("◐ Extra game settings"), Custom String("Free walking default"), False, 3);
 		Global.bkey = Workshop Setting Combo(Custom String("◐ Keybinds"), Custom String("Reset keybinds"), 0, Array(
 	    	Custom String("Taw, Giga [Reload]"), Custom String("Peace [Ultimate]")), 0);
 		Global.rkey = Workshop Setting Combo(Custom String("◐ Keybinds"), Custom String("Restart keybinds"), 0, Array(
