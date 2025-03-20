@@ -1229,7 +1229,7 @@ rule("Modify the size of the checkpoint / sphere / cloud")
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Jump), Button(Melee), Button(Primary Fire), Button(Secondary Fire))), Is Button Held(
 			Event Player, Current Array Element)));
 		If(Is Button Held(Host Player, Button(Primary Fire)));
-			If(Weapon(Event Player) == 2 && Event Player.editMode == 1 && Count Of(Global.Checkpoint) > 0);
+			If(Weapon(Event Player) == 2 && Event Player.editMode == 7 && Count Of(Global.Checkpoint) > 0);
 				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
 					Current Array Index == 1 ? Current Array Element + 0.050 : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
@@ -1263,7 +1263,7 @@ rule("Modify the size of the checkpoint / sphere / cloud")
 				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 			End;
 		Else If(Is Button Held(Host Player, Button(Secondary Fire)));
-			If(Weapon(Event Player) == 2 && Event Player.editMode == 1 && Count Of(Global.Checkpoint)
+			If(Weapon(Event Player) == 2 && Event Player.editMode == 7 && Count Of(Global.Checkpoint)
 				> 0 && Event Player.checkpointA[1] > 0.500);
 				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
 					Current Array Index == 1 ? Current Array Element - 0.050 : Current Array Element);
