@@ -615,7 +615,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 				"0, checkponit position\n1, checkpoint radius\n2, crouch\n3, bot, default empty array(BotVector, NeedResurrect, RefreshAbility1)\n4, unlimited ga\n5, teleport, defalut false\n6, orb, default empty array\n7, sphere, default empty array\n8, cloud, default empty array"
 				Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk);
+			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk, False);
                 "9, enemy bot, default empty array(botvector, refreshability1 on kill, refresh vector)"
 				Event Player.checkpoint = Count Of(Global.Checkpoint) - 1;
 				Call Subroutine(GetCurrentCheckpoint);
@@ -818,7 +818,7 @@ rule("Insert point")
 		Global.Checkpoint = Array Slice(Global.Checkpoint, 0, Event Player.checkpoint + 1);
 		Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk);
+			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk, False);
 		Modify Global Variable(Checkpoint, Append To Array, Global.TempArray);
 		Event Player.checkpoint += 1;
 		Call Subroutine(GetCurrentCheckpoint);
@@ -843,7 +843,7 @@ rule("Create / Delete bot")
 	conditions
 	{
 		Global.EditMode == True;
-		(Event Player.editMode < 3 || Event Player.editMode == 6) == True;
+		(Event Player.editMode < 3 || Event Player.editMode == 6 || Event Player.editMode == 7) == True;
 		Event Player == Host Player;
 		Is Button Held(Event Player, Button(Melee)) == True;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Ability 2))) == True;
@@ -858,7 +858,7 @@ rule("Create / Delete bot")
 			Global.Error = False;
 			Abort;
 		End;
-		If(Weapon(Event Player) == 2 && (Event Player.editMode != 2) && (Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))));
+		If(Weapon(Event Player) == 2 && (Event Player.editMode != 2) && (Event Player.editMode != 7) && (Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))));
             If(Is Button Held(Event Player, Button(Primary Fire)));
                 Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Position Of(
 		    		Event Player), Current Array Element[1], Current Array Element[2], Current Array Element[3], Current Array Element[4]) : Current Array Element);
@@ -891,7 +891,7 @@ rule("Create / Delete bot")
 			Else If(Event Player.checkpointA[9] && Is Dead(Event Player.enmy));
 				Resurrect(Event Player.enmy);
             End;
-        Else If(Event Player.editMode != 2 && Is Button Held(Event Player, Button(Ability 2)));
+        Else If(Event Player.editMode != 2 && (Event Player.editMode != 7) && Is Button Held(Event Player, Button(Ability 2)));
             If(Weapon(Event Player) == 1);
                 Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
                 True, Position Of(Event Player), False, Current Array Element[4]) : Current Array Element);
@@ -907,6 +907,15 @@ rule("Create / Delete bot")
     		End;
 			Small Message(All Players(All Teams), Event Player.checkpointA[9][2] ? Custom String("   Created/Moved Refresh Bot") : Custom String(
 				"   Refresh Bot Deleted — Resetting refresh to default"));
+		Else If(Event Player.editMode == 7 && Is Button Held(Event Player, Button(Ability 2)));
+			Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 12 ? !Current Array Element : Current Array Element);
+			Call Subroutine(GetCurrentCheckpoint);
+			Call Subroutine(TeleportCurrentBot);
+			Wait(0.100, Ignore Condition);
+			Small Message(All Players(All Teams), Event Player.checkpointA[12] ? Custom String(
+				"   Enabled bot crouching for this level") : Custom String(
+				"   Disabled bot crouching for this level"));
+			Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 		Else If(Event Player.editMode == 1);
             If(Weapon(Event Player) == 1 && (Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))));
 			    If(Is Button Held(Event Player, Button(Primary Fire)));
@@ -927,7 +936,7 @@ rule("Create / Delete bot")
 				    "   Bot Deleted"));
 			End;
 		Else If(Event Player.editMode == 2);
-			If(Is Button Held(Event Player, Button(Primary Fire)));
+			If(Is Button Held(Event Player, Button(Primary Fire)) && !Is Button Held(Event Player, Button(Ability 2)));
 				Event Player.currentOrb[Global.CurrentChooseOrb] = Mapped Array(Event Player.currentOrb[Global.CurrentChooseOrb],
 					Current Array Index == 1 ? Position Of(Event Player) : Current Array Element);
 				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
@@ -937,7 +946,7 @@ rule("Create / Delete bot")
 				Call Subroutine(CreateNewEffect);
 				Small Message(All Players(All Teams), Custom String("   Created/Moved Bot"));
 				Play Effect(Event Player, Buff Impact Sound, Null, Event Player, 100);
-			Else;
+			Else If(!Is Button Held(Event Player, Button(Ability 2)));
 				Event Player.currentOrb[Global.CurrentChooseOrb] = Mapped Array(Event Player.currentOrb[Global.CurrentChooseOrb],
 					Current Array Index == 1 || Current Array Index == 2 ? False : Current Array Element);
 				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
@@ -1155,7 +1164,7 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 				Wait(0.100, Ignore Condition);
 	    		Small Message(All Players(All Teams), Custom String("   {0} landing on next checkpoint during resurrection", Event Player.checkpointA[10] ? Custom String(
 					"Enabled") : Custom String("Disabled")));	
-				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);		
+				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);	
 			End;
 		End;
 	}
@@ -3861,7 +3870,7 @@ rule("Subroutine CreateGlobalHUD")
                 Custom String("\nRestart: Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
                 : Custom String("Ultimate"))), Custom String("Create Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
                 Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nResurrect Bot | Interact + Reload"))), Custom String("REZ on goal | Interact + Reload\nBot crouching | Interact + Ability 1{0}",
+                Custom String("\nResurrect Bot | Interact + Reload"))), Custom String("REZ on goal | Interact + Reload\nBot crouching | Melee + Rez{0}",
 				Custom String("\nFree walking | Interact + Resurrect\nSwitch Crouch | Interact + Crouch{0}", 
 				Custom String("\nUnlimited Ga | Interact + Ultimate\nSwitch Teleport | Interact + Jump{0}", 
 				Custom String("\nAdjust Radius | Jump + Melee + Prim. / Secon. Fire [GUN]")))))[Host Player.editMode], 
@@ -4147,6 +4156,8 @@ rule("Subroutine TeleportCurrentBot")
 		End;
 		Resurrect(!Is Alive(Event Player.targetBot) && !Event Player.checkpointA[3][1] ? Event Player.targetBot : Null);
         Wait(0.016, Ignore Condition);
+		Start Holding Button(Event Player.checkpointA[12] ? Event Player.targetBot : Null, Button(Crouch));
+		Stop Holding Button(!Event Player.checkpointA[12] ? Event Player.targetBot : Null, Button(Crouch));
 		Event Player.aura = True;
 	}
 }
