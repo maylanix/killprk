@@ -3290,6 +3290,10 @@ rule("Subroutine ErrorWarningmsgs")
                 Small Message(Event Player, Custom String("   Nothing to delete"));
                 Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			    Global.Error = True;
+			Else If(Event Player.editMode == 7 && !Event Player.checkpointA[3]);
+				Small Message(Event Player, Custom String("   There is no target bot yet"));
+				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
+			    Global.Error = True;
             End;
 		End;
 	}
