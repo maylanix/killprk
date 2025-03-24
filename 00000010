@@ -3907,9 +3907,11 @@ rule("Subroutine CreateGlobalHUD")
 				Host Player.checkpointA[3][1] ? Custom String("√") : Custom String("×"), Custom String("Resurrection refresh GA : {0}\n{1}",
 				Host Player.checkpointA[3][1] && Host Player.checkpointA[3][2] ? Custom String("√") : Custom String("×"), Custom String(
 				"UNLIMITED GA : {0}\n{1}", Host Player.checkpointA[4] ? Custom String("√") : Custom String("×"), Custom String(
-				"REZ ON GOAL  : {0}\n{1}", Host Player.checkpointA[10] ? Custom String("√") : Custom String("×"), Custom String(
+				"REZ ON GOAL  : {0}\n{1}", Host Player.checkpointA[10] ? Custom String("√") : Custom String("×"), Custom String("BOT CROUCH : {0}\n{1}", 
+				Host Player.checkpointA[12] ? Custom String("√") : Custom String("×"), Custom String("FREE WALK : {0}\n{1}", Host Player.checkpointA[11] ? 
+				Custom String("√") : Custom String("×"), Custom String(
 				"TELEPORT : {0}\n{1}", Host Player.checkpointA[5] ? Custom String("√") : Custom String("×"), Custom String("POSITION : {0}",
-				Host Player.checkpointA[0]))))))))), Host Player.checkpointA[0] + Vector(0, 0.500, 0), 1.200, Do Not Clip,
+				Host Player.checkpointA[0]))))))))))), Host Player.checkpointA[0] + Vector(0, 0.500, 0), 1.200, Do Not Clip,
 				Visible To Position and String, Color(Rose), Default Visibility);
 			Create Effect(Count Of(Host Player.currentOrb) > 0 && Host Player.editMode == 2 ? All Players(All Teams) : Null, Good Aura,
 				Host Player.currentOrb[Global.CurrentChooseOrb][1] ? Global.Config[44] : Global.Config[42], Global.ChooseOrbPosition, 1.300,
