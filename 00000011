@@ -3884,7 +3884,7 @@ rule("Subroutine CreateGlobalHUD")
                 Custom String("\nCreate Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
                 Custom String("\nRefresh GA after REZ | Interact + Ability 1 [STAFF]\nRefresh GA after KILL | Interact + Ability 1 [GUN]{0}", 
                 Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nExtra options mode | Crouch + Jump [STAFF]\nKill Bot Refresh Mode | Crouch + Jump [GUN]{0}")))))), 
+                Custom String("\nExtra options mode | Crouch + Jump [STAFF]\nKill Bot Refresh Mode | Crouch + Jump [GUN]")))))), 
                 Custom String("CONTROLS:\nRefresh GA after REZ | Interact + Ability 1"), Custom String("CONTROLS:\nAdjust Radius | Jump + Melee + Primary / Secondary Fire"), 
                 Custom String("CONTROLS:\nAdjust Level | Jump + Melee + Primary / Secondary Fire"), Custom String("PLAY MODE"), Custom String("REFRESH SECTION{0}",
 				Custom String("\nCheckpoint mode | Crouch + Jump [GUN]\nExtra options mode | Crouch + Jump [STAFF]")),
