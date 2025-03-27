@@ -891,7 +891,7 @@ rule("Create / Delete bot")
 			Else If(Event Player.checkpointA[9] && Is Dead(Event Player.enmy));
 				Resurrect(Event Player.enmy);
             End;
-        Else If(Event Player.editMode != 2 && (Event Player.editMode != 7) && Is Button Held(Event Player, Button(Ability 2)));
+        Else If(Event Player.editMode == 6 && Is Button Held(Event Player, Button(Ability 2)));
             If(Weapon(Event Player) == 1);
                 Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
                 True, Position Of(Event Player), False, Current Array Element[4]) : Current Array Element);
@@ -3282,11 +3282,11 @@ rule("Subroutine ErrorWarningmsgs")
 				Global.Error = True;
 			End;
         Else If(Is Button Held(Event Player, Button(Ability 2)) && Is Button Held(Event Player, Button(Melee)));
-            If((Event Player.editMode == 1 || Event Player.editMode == 6) && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
+            If(Event Player.editMode == 6 && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
                 Small Message(Event Player, Custom String("   Cannot add bot -- add enemy bot first"));
                 Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			    Global.Error = True;
-            Else If((Event Player.editMode == 1 || Event Player.editMode == 6) && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
+            Else If(Event Player.editMode == 6 && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
                 Small Message(Event Player, Custom String("   Nothing to delete"));
                 Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			    Global.Error = True;
