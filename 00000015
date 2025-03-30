@@ -155,8 +155,6 @@ variables
 		9: cloudEffects
         10: enmy
 		11: displayedCheckpoint
-		12: jump
-		13: bhop
 		14: bestRecord
 		15: playerData
 		16: tempCurrentOrb
@@ -1974,97 +1972,6 @@ rule("Crouch disabled tips")
 	}
 }
 
-rule("Landing initialization jump and bhop")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Is On Ground(Event Player) == True;
-		Is Button Held(Event Player, Button(Jump)) == False;
-	}
-
-	actions
-	{
-		"***original editor credit to peace (T6QQT)***"
-		Event Player.jump = 1;
-		Event Player.bhop = 0;
-	}
-}
-
-rule("Pressing the space will lose the jump")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Is Button Held(Event Player, Button(Jump)) == True;
-		Event Player.jump == 1;
-	}
-
-	actions
-	{
-		"***original editor credit to peace (T6QQT)***"
-		Event Player.jump = 0;
-	}
-}
-
-rule("Walking out of the platform or using the guardian angel without pressing the space will get a bhop and lose the jump")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Event Player.jump == 1;
-		Is In Air(Event Player) == True;
-		Is Button Held(Event Player, Button(Jump)) == False;
-	}
-
-	actions
-	{
-		"***original editor credit to peace (T6QQT)***"
-		Event Player.bhop = 1;
-		Event Player.jump = 0;
-	}
-}
-
-rule("Use bhop")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Event Player.bhop != 0;
-		Is Jumping(Event Player) == True;
-	}
-
-	actions
-	{
-		"***original editor credit to peace (T6QQT)***"
-		Event Player.bhop = 0;
-	}
-}
-
 rule("3rd person")
 {
 	event
@@ -3771,8 +3678,6 @@ rule("Subroutine CreateGlobalHUD")
 				"Elapsed time {0} minutes {1} seconds", Round To Integer(Total Time Elapsed / 60, Down), Round To Integer(
 				Total Time Elapsed % 60, Down))), Null, Top, 0, Null, Color(White), Null, Visible To and String, Default Visibility);
 		End;
-		Create Effect(Local Player.bhop ? Local Player : Null, Ana Nano Boosted Effect, Null, Local Player, 1,
-			Visible To Position and Radius);
 		Create HUD Text(All Players(All Teams), Null, Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Custom String(
 			"제작자: {0}\n코드: {1}", Global.CreatorAndCode[0] ? Global.CreatorAndCode[0] : Custom String("익명"),
 			Global.CreatorAndCode[1] ? Global.CreatorAndCode[1] : Custom String("아직")) : (Custom String("{0}", Hero(Mercy))
