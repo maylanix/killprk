@@ -2,8 +2,8 @@ settings
 {
 	main
 	{
-		Description: "<FG8533ffFF>★ kill r66 ★\n<FGa366ffFF>mercy parkour map by maylanix ♡\n\n<FGe0ccffFF>THANK YOU! ♡\n<FGf0e6ffFF> playtesters:\n    ★ \n peace's editor: T6QQT"
-		Mode Name: "r66 ‣ mercy kill parkour"
+		Description: "★ mercy kill parkour ★\n★ editor by maylanix ★\neditor code: ???\n\nfor any issues report them at\n  https://github.com/maylanix/killprk/issues\n\nderived from peace's editor: T6QQT"
+		Mode Name: "[mercy kill parkour editor]"
 	}
 
 	lobby
@@ -155,8 +155,6 @@ variables
 		9: cloudEffects
         10: enmy
 		11: displayedCheckpoint
-		12: jump
-		13: bhop
 		14: bestRecord
 		15: playerData
 		16: tempCurrentOrb
@@ -244,8 +242,10 @@ rule("<fgffb3b3ff>welcome to my mercy kill parkour editor - maylanix ♡ (read m
 
     actions
     {
-        "» the editor is ready for use;\n» please report any bugs/issues to maylanix on discord"
+        "» the editor is ready for use;\n» for any inquiries visit:\n   github.com /maylanix/killprk/issues (without the space)"
         Continue;
+		"» if you haven't used github before, join the discord for a tutorial.\n   discord.gg/???"
+		Continue;
 		"» have a look at the orange settings for some extra settings!\n» check out new customization options in [setup]"
         Continue;
 		"***original editor credit to peace (T6QQT)***\nalso thanks to gigamercy cause i grabbed his dummy bot destroyer :)"
@@ -489,6 +489,7 @@ rule("Global initialization")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Call Subroutine(InitializeGlobalVariables);
 		Wait(2, Ignore Condition);
 		Disable Built-In Game Mode Announcer;
@@ -527,6 +528,7 @@ rule("Player initialization")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Disable Game Mode In-World UI(Event Player);
 		Disable Nameplates(All Players(All Teams), All Players(All Teams));
 		Enable Death Spectate All Players(Event Player);
@@ -574,6 +576,7 @@ rule("Switch Edit Mode")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Button(Interact)), Is Button Held(Event Player,
 			Current Array Element)));
 		Wait Until(!Is Button Held(Event Player, Button(Interact)), 9999);
@@ -608,6 +611,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Interact), Button(Primary Fire), Button(Secondary Fire))), Is Button Held(
 			Event Player, Current Array Element)));
 		If(Is Button Held(Event Player, Button(Primary Fire)));
@@ -775,6 +779,7 @@ rule("Move checkpoint")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Interact), Button(Ability 2))), Is Button Held(
 			Event Player, Current Array Element)));
 		If(Event Player.editMode == 1);
@@ -812,6 +817,7 @@ rule("Insert point")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Melee), Button(Interact))), Is Button Held(
 			Event Player, Current Array Element)));
 		Global.TempArray = Array Slice(Global.Checkpoint, Event Player.checkpoint + 1, Count Of(Global.Checkpoint));
@@ -851,6 +857,7 @@ rule("Create / Delete bot")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Melee), Button(Ability 2), Button(Primary Fire), Button(Secondary Fire))), Is Button Held(
 			Event Player, Current Array Element)));
 		Call Subroutine(ErrorWarningMsg);
@@ -891,7 +898,7 @@ rule("Create / Delete bot")
 			Else If(Event Player.checkpointA[9] && Is Dead(Event Player.enmy));
 				Resurrect(Event Player.enmy);
             End;
-        Else If(Event Player.editMode != 2 && (Event Player.editMode != 7) && Is Button Held(Event Player, Button(Ability 2)));
+        Else If(Event Player.editMode == 6 && Is Button Held(Event Player, Button(Ability 2)));
             If(Weapon(Event Player) == 1);
                 Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
                 True, Position Of(Event Player), False, Current Array Element[4]) : Current Array Element);
@@ -981,6 +988,7 @@ rule("Choose checkpoint, orb, sphere, cloud")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Ability 2), Button(Primary Fire), Button(Secondary Fire))), Is Button Held(
 			Event Player, Current Array Element)));
 		If(Event Player.editMode == 1 && Count Of(Global.Checkpoint) > 1);
@@ -1044,6 +1052,7 @@ rule("Switch crouch,teleport, unlimited ga, need resurrect")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Crouch), Button(Jump), Button(Ultimate), Button(Reload), Button(Ability 1), Button(Interact))), Is Button Held(
 			Event Player, Current Array Element)));
 		Call Subroutine(ErrorWarningMsg);
@@ -1242,6 +1251,7 @@ rule("Modify the size of the checkpoint / sphere / cloud")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Jump), Button(Melee), Button(Primary Fire), Button(Secondary Fire))), Is Button Held(
 			Event Player, Current Array Element)));
 		If(Is Button Held(Host Player, Button(Primary Fire)));
@@ -1339,6 +1349,7 @@ rule("Move Sphere / Cloud")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Reload), Button(Primary Fire), Button(Secondary Fire))), Is Button Held(
 			Event Player, Current Array Element)));
 		If(Is Button Held(Event Player, Button(Primary Fire)));
@@ -1475,6 +1486,7 @@ rule("Export data")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Wait(2, Abort When False);
 		Call Subroutine(ClearRedundantData);
 		Enable Inspector Recording;
@@ -1564,6 +1576,7 @@ rule("Arrival checkpoint")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Count Of(Event Player.tempCurrentOrb) > 0);
 			Call Subroutine(TeleportToCurrentCheckpoint);
 			Small Message(Event Player, Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Global.Config[22][1] : (Custom String(
@@ -1654,6 +1667,7 @@ rule("Set status for players")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Clear Status(Event Player, Invincible);
 		Disable Movement Collision With Players(Event Player);
 		Wait(0.016, Ignore Condition);
@@ -1700,6 +1714,7 @@ rule("Resurrection after death")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(!Event Player.finished && !Event Player.freeMode);
 			Teleport(Event Player, Event Player.checkpointA[0]);
 			Event Player.mistake += 1;
@@ -1733,6 +1748,7 @@ rule("Kill bot")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Kill(Event Player.targetBot, Null);
 	}
 }
@@ -1759,6 +1775,7 @@ rule("back point after landing")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Call Subroutine(TeleportToCurrentCheckpoint);
 	}
 }
@@ -1782,6 +1799,7 @@ rule("Ga restrictions")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.currentCheckpoint = Event Player.checkpoint;
 		Wait Until(!Is Using Ability 1(Event Player), 9999);
 		If(Ability Cooldown(Event Player, Button(Ability 1))
@@ -1808,6 +1826,7 @@ rule("Refresh the ga after resurrecting the target")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.resurrectTime = 0;
 		Chase Player Variable At Rate(Event Player, resurrectTime, 9999, 1, None);
 		Wait Until(!Is Using Ability 2(Event Player), 1.750);
@@ -1853,6 +1872,7 @@ rule("Get orb")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.nearestOrb = First Of(Filtered Array(Event Player.tempCurrentOrb, Distance Between(Event Player,
 			Current Array Element[0]) <= 1.500 || Distance Between(Eye Position(Event Player), Current Array Element[0]) <= 1.500));
 		Event Player.tempCurrentOrb = !Event Player.finished && !Event Player.freeMode ? Filtered Array(Event Player.tempCurrentOrb,
@@ -1915,6 +1935,7 @@ rule("Back to point refresh ablities")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(!Event Player.isSetAbilities);
 			Call Subroutine(SetCurrentAbilities);
 			If(Event Player.currentOrb);
@@ -1944,96 +1965,10 @@ rule("Crouch disabled tips")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Small Message(Event Player, Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Global.Config[17][1] : (Custom String(
 			"{0}", Hero(Mercy)) == Custom String("天使") ? Global.Config[17][2] : Custom String("   {0}", Global.Config[17][0])));
 		Wait(1, Ignore Condition);
-	}
-}
-
-rule("Landing initialization jump and bhop")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Is On Ground(Event Player) == True;
-		Is Button Held(Event Player, Button(Jump)) == False;
-	}
-
-	actions
-	{
-		Event Player.jump = 1;
-		Event Player.bhop = 0;
-	}
-}
-
-rule("Pressing the space will lose the jump")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Is Button Held(Event Player, Button(Jump)) == True;
-		Event Player.jump == 1;
-	}
-
-	actions
-	{
-		Event Player.jump = 0;
-	}
-}
-
-rule("Walking out of the platform or using the guardian angel without pressing the space will get a bhop and lose the jump")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Event Player.jump == 1;
-		Is In Air(Event Player) == True;
-		Is Button Held(Event Player, Button(Jump)) == False;
-	}
-
-	actions
-	{
-		Event Player.bhop = 1;
-		Event Player.jump = 0;
-	}
-}
-
-rule("Use bhop")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Mercy;
-	}
-
-	conditions
-	{
-		Event Player.bhop != 0;
-		Is Jumping(Event Player) == True;
-	}
-
-	actions
-	{
-		Event Player.bhop = 0;
 	}
 }
 
@@ -2056,6 +1991,7 @@ rule("3rd person")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.third = !Event Player.third;
 		If(Event Player.third);
 			"by overclocking"
@@ -2092,6 +2028,7 @@ rule("Back to point")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Reload), Button(Jump), Button(Ultimate))), Is Button Held(
 			Event Player, Current Array Element)));
 		If((Is Button Held(Event Player, Button(Reload)) && Global.bkey == 0) || Is Button Held(Event Player, Button(Ultimate)) && Global.bkey == 1);
@@ -2119,6 +2056,7 @@ rule("Free mode")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(!Event Player.freeMode);
 			Stop Chasing Player Variable(Event Player, time);
 			Call Subroutine(EnableAllAbilities);
@@ -2171,6 +2109,7 @@ rule("Spectator mode")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Ultimate), Button(Ability 2))), Is Button Held(
 			Event Player, Current Array Element)));
 		Event Player.spectatorMode = !Event Player.spectatorMode;
@@ -2212,6 +2151,7 @@ rule("Preview point")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Primary Fire), Button(Secondary Fire))),
 			Is Button Held(Event Player, Current Array Element)));
 		If(Global.EditMode || !Global.PreviewPosition[Event Player.checkpoint]);
@@ -2275,6 +2215,7 @@ rule("Back to saved level")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Ability 2), Button(Melee), Button(Interact))),
 			Is Button Held(Event Player, Current Array Element)));
 		Call Subroutine(TempSavePlayerData);
@@ -2300,6 +2241,7 @@ rule("Interrupt Valkyrie")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Wait Until(!Is Button Held(Event Player, Button(Melee)), 9999);
 		Wait Until(Is Button Held(Event Player, Button(Melee)), 0.300);
 		If(Is Button Held(Event Player, Button(Melee)));
@@ -2329,6 +2271,7 @@ rule("set temporary checkpoint")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Ability 2), Button(Reload))), Is Button Held(
 			Event Player, Current Array Element)));
 		If(Is Button Held(Event Player, Button(Ability 2)));
@@ -2375,6 +2318,7 @@ rule("Obstacle Sphere effect")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(!Event Player.finished && !Event Player.freeMode);
 			Set Status(Event Player, Null, Burning, 0.150);
 			Call Subroutine(TeleportToCurrentCheckpoint);
@@ -2407,6 +2351,7 @@ rule("Elastic cloud effect")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Apply Impulse(Event Player, Up, First Of(Filtered Array(Event Player.currentCloud, Distance Between(Event Player,
 			Current Array Element[0]) <= 1.500))[1], To World, Cancel Contrary Motion);
 		Play Effect(Event Player, Baptiste Biotic Launcher Explosion Sound, Null, Event Player, 80);
@@ -2424,6 +2369,7 @@ rule("Player left match, destroy the player`s mercy")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Array Contains(Global.ShowHotKeyPlayers, Event Player));
 			Modify Global Variable(ShowHotKeyPlayers, Remove From Array By Value, Event Player);
 		End;
@@ -2478,6 +2424,7 @@ rule("Start timing after leaving the initial point")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Chase Player Variable At Rate(Event Player, time, 16200, 1, None);
 		Event Player.leaveOriginalCheckpoint = True;
 	}
@@ -2502,6 +2449,7 @@ rule("Return to the initial point to reset the timing")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Stop Chasing Player Variable(Event Player, time);
 		Event Player.time = 0;
 		Event Player.mistake = 0;
@@ -2527,6 +2475,7 @@ rule("Restart")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Interact), Button(Ultimate), Button(Crouch), Button(Ability 2))), Is Button Held(
 				Event Player, Current Array Element)));
 		If((Is Button Held(Event Player, Button(Crouch)) && Is Button Held(Event Player, Button(Ability 2)) && Global.rkey == 1) || Is Button Held(Event Player, Button(Ultimate)) && Global.rkey == 0);
@@ -2579,6 +2528,7 @@ rule("Next Point/ Prev Point")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Melee), Button(Ability 2), Button(Primary Fire),
 				Button(Secondary Fire))), Is Button Held(Event Player, Current Array Element)));
 		Call Subroutine(TempSavePlayerData);
@@ -2607,6 +2557,7 @@ rule("Show or hide shortcuts")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Button(Interact)), Is Button Held(Event Player,
 			Current Array Element)));
 		Wait Until(!Is Button Held(Event Player, Button(Interact)), 9999);
@@ -2642,6 +2593,7 @@ rule("Teleport checkpoints")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Wait(0.016, Ignore Condition);
 		Teleport(Event Player, Event Player.checkpointB[0]);
 	}
@@ -2661,6 +2613,7 @@ rule("Restart Match")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Big Message(All Players(All Teams), Custom String("1 Minute Warning"));
 		Wait(60, Ignore Condition);
 		Big Message(All Players(All Teams), Custom String("Match Time Is Up!"));
@@ -2689,6 +2642,7 @@ rule("Finished setting")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.finished = True;
 		Call Subroutine(EnableAllAbilities);
         Set Damage Dealt(Event Player, 0);
@@ -2712,6 +2666,7 @@ rule("Not finished setting")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.finished = False;
 		If(!Event Player.freeMode);
 			Set Ultimate Ability Enabled(Event Player, False);
@@ -2742,6 +2697,7 @@ rule("Set Ultimate Charge 100%")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Is Using Ultimate(Event Player) && Hero Of(Event Player) == Hero(Mercy));
 			Small Message(Event Player, Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Custom String("발키리 해제 : 음성 {0}",
 				Input Binding String(Button(Melee))) : (Custom String("{0}", Hero(Mercy)) == Custom String("天使") ? Custom String(
@@ -2769,6 +2725,7 @@ rule("Hold R, Disable Movement Collision With Environment")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Button(Reload)), Is Button Held(Event Player,
 			Current Array Element)));
 		Wait(1, Abort When False);
@@ -2806,6 +2763,7 @@ rule("Interact, teleporting players")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Button(Interact)), Is Button Held(Event Player,
 			Current Array Element)));
 		If(Is Button Held(Event Player, Button(Reload)) && !Player Closest To Reticle(Event Player, All Teams).checkpointA[5]);
@@ -2836,6 +2794,7 @@ rule("Primary / Secondary Fire, select hero")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			Event Player.chooseHero += Event Player.chooseHero == Count Of(All Heroes) - 1 ? 1 - Count Of(All Heroes) : 1;
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
@@ -2866,6 +2825,7 @@ rule("change hero")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Play Effect(All Players(Team Of(Event Player)), Brigitte Repair Pack Armor Sound, Null, Event Player, 100);
 		Wait(0.300, Ignore Condition);
 		Abort If(!Event Player.finished);
@@ -2896,6 +2856,7 @@ rule("Crouch+Ablitiy2+Primary/Secondary/Melee, control voice")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Is Button Held(Event Player, Button(Primary Fire)) && Event Player.voice < 1.500);
 			Event Player.voice += 0.010;
 			Wait(0.016, Ignore Condition);
@@ -2944,6 +2905,7 @@ rule("Jump+Ablitiy2+Primary/Secondary/Melee, control body size")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Is Button Held(Event Player, Button(Primary Fire)) && Event Player.bodySize < 7);
 			Event Player.bodySize += 0.010;
 			Wait(0.016, Ignore Condition);
@@ -2992,6 +2954,7 @@ rule("Crouch+Ability1+Primary/Secondary/melee, control the trajectory")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Is Button Held(Event Player, Button(Primary Fire)) && Event Player.projectile < 500);
 			Event Player.projectile += 1;
 			Wait(0.016, Ignore Condition);
@@ -3046,6 +3009,7 @@ rule("Jump+Ability1+Primary/Secondary/Melee, control barrier")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Is Button Held(Event Player, Button(Primary Fire)) && Event Player.barrierSize < 7);
 			Event Player.barrierSize += 0.010;
 			Wait(0.016, Ignore Condition);
@@ -3070,51 +3034,6 @@ rule("Jump+Ability1+Primary/Secondary/Melee, control barrier")
 			Event Player.barrierSize = 1;
 			Small Message(Event Player, Custom String("Default barrier restored"));
 		End;
-	}
-}
-
-rule("Fast melee")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Global.EditMode == False;
-		(Event Player.finished || Event Player.freeMode) == True;
-		Hero Of(Event Player) != Hero(Reinhardt);
-		Hero Of(Event Player) != Hero(Brigitte);
-		Is Button Held(Event Player, Button(Melee)) == True;
-		Is Button Held(Event Player, Button(Reload)) == False;
-		Is Button Held(Event Player, Button(Ability 1)) == False;
-		Is Button Held(Event Player, Button(Ability 2)) == False;
-	}
-
-	actions
-	{
-		Wait(0.500, Abort When False);
-		Disallow Button(Event Player, Button(Primary Fire));
-		Disallow Button(Event Player, Button(Secondary Fire));
-		Disallow Button(Event Player, Button(Ability 1));
-		Disallow Button(Event Player, Button(Ability 2));
-		Disallow Button(Event Player, Button(Ultimate));
-		While(Is Button Held(Event Player, Button(Melee)));
-			Wait(0.016, Ignore Condition);
-			Press Button(Event Player, Button(Melee));
-			Wait(0.034, Ignore Condition);
-			Cancel Primary Action(Event Player);
-			Set Ability Cooldown(Event Player, Button(Melee), 0);
-			Wait(0.050, Ignore Condition);
-		End;
-		Allow Button(Event Player, Button(Primary Fire));
-		Allow Button(Event Player, Button(Secondary Fire));
-		Allow Button(Event Player, Button(Ability 1));
-		Allow Button(Event Player, Button(Ability 2));
-		Allow Button(Event Player, Button(Ultimate));
 	}
 }
 
@@ -3218,6 +3137,7 @@ rule("Subroutine ErrorWarningmsgs")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Count Of(Global.Checkpoint) == 0);
 			Small Message(Event Player, Custom String("   There are no checkpoints yet"));
 			Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
@@ -3282,11 +3202,11 @@ rule("Subroutine ErrorWarningmsgs")
 				Global.Error = True;
 			End;
         Else If(Is Button Held(Event Player, Button(Ability 2)) && Is Button Held(Event Player, Button(Melee)));
-            If((Event Player.editMode == 1 || Event Player.editMode == 6) && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
+            If(Event Player.editMode == 6 && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
                 Small Message(Event Player, Custom String("   Cannot add bot -- add enemy bot first"));
                 Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			    Global.Error = True;
-            Else If((Event Player.editMode == 1 || Event Player.editMode == 6) && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
+            Else If(Event Player.editMode == 6 && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
                 Small Message(Event Player, Custom String("   Nothing to delete"));
                 Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			    Global.Error = True;
@@ -3309,6 +3229,7 @@ rule("Subroutine  CreateNewEffect")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Event Player.editMode == 2);
 			Destroy Icon(Event Player.botIcons[Global.CurrentChooseOrb]);
 			Modify Player Variable(Event Player, botIcons, Remove From Array By Index, Global.CurrentChooseOrb);
@@ -3373,6 +3294,7 @@ rule("Subroutine  EditChoosedEffect")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Event Player.editMode == 2);
 			Destroy Icon(Event Player.orbIcons[Global.CurrentChooseOrb]);
 			Destroy Effect(Event Player.orbEffects[Global.CurrentChooseOrb]);
@@ -3422,6 +3344,7 @@ rule("Subroutine KillOrResurrectBot")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Event Player.editMode == 2);
 			Event Player.nearestOrb = Event Player.currentOrb[Global.CurrentChooseOrb];
 			If(Event Player.nearestOrb[2]);
@@ -3453,6 +3376,7 @@ rule("Subroutine  TeleportBotToRefreshPosition")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
         Teleport(Event Player.targetBot, Event Player.nearestOrb[1] ? Event Player.nearestOrb[1] : Nearest Walkable Position(Vector(-500,
 			-500, -500)));
 		Kill(Event Player.nearestOrb[2] ? Event Player.targetBot : Null, Null);
@@ -3488,6 +3412,7 @@ rule("Subroutine ClearRedundantData")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Global.EditMode = Null;
 		Global.Debug = Null;
 		Global.Error = Null;
@@ -3568,6 +3493,7 @@ rule("Subroutine  InitializeGlobalVariables")
 	    	Custom String("Taw, Giga [Reload]"), Custom String("Peace [Ultimate]")), 0);
 		Global.rkey = Workshop Setting Combo(Custom String("◐ Keybinds"), Custom String("Restart keybinds"), 0, Array(
 	    	Custom String("Taw [Ultimate + Interact]"), Custom String("Peace, Giga [Crouch + Interact + Rez]")), 1);
+		"***original editor credit to peace (T6QQT)***"
 		Global.EditMode = Workshop Setting Toggle(Custom String("‣ Edit mode"), Custom String("Edit Mode(편집 모드)"), True, 0);
 		Global.NewCheckpointDefaultRadius = Workshop Setting Real(Custom String("◑ Game Settings"), Custom String(
 			"New level radius(새 관문 반경)"), 1.600, 1, 5, 0);
@@ -3595,7 +3521,7 @@ rule("Subroutine  InitializeGlobalVariables")
 			Custom String("{0} Exit", Ability Icon String(Hero(Kiriko), Button(Ability 2))), Color(White)), Array(Custom String("maylanix"), 
 			Custom String("maylanix {0}", Icon String(Skull)), Custom Color(255, 153, 187, 255)), Array(Custom String("EggsBenna"), Custom String("egg {0}", Ability Icon String(Hero(
 			Ashe), Button(Ultimate))), Custom Color(255, 153, 187, 255)), Array(Custom String("localmvthman"), Custom String("localmvthman {0}", Ability Icon String(Hero(
-			Illari), Button(Ultimate))), Custom Color(253, 249, 80, 255)), Array(Custom String("OnMyKnees"), Custom String("onmyknees {0}", Ability Icon String(Hero(
+			Illari), Button(Ultimate))), Custom Color(253, 249, 80, 255)), Array(Custom String("OnMyKnees"), Custom String("minna {0}", Ability Icon String(Hero(
 			Hanzo), Button(Ultimate))), Custom Color(255, 153, 187, 255)), Array(Custom String("clementine"), Custom String("clementine {0}", Ability Icon String(Hero(
 			Mercy), Button(Ability 1))), Custom Color(255, 153, 102, 255)), Array(Custom String("GigaMercy"), Custom String("gigamercy {0}", Ability Icon String(Hero(
 			Mercy), Button(Ability 1))), Custom Color(251, 134, 28, 255)), Array(Custom String("tealover"), Custom String("tealover ♡"), Custom Color(255, 153, 204, 255)), 
@@ -3626,6 +3552,7 @@ rule("Subroutine  InitializePlayerVariables")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.checkpoint = 0;
 		Event Player.freeMode = False;
 		Event Player.spectatorMode = False;
@@ -3672,6 +3599,7 @@ rule("Subroutine CreatePlayerTargetBot")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(!Entity Exists(Event Player.targetBot));
 			Create Dummy Bot(Global.allybot, Team Of(Event Player), Slot Of(Event Player) + Number Of Slots(All Teams),
 				Global.Checkpoint[Event Player.checkpoint][3][0] ? Global.Checkpoint[Event Player.checkpoint][3][0] : Nearest Walkable Position(
@@ -3734,7 +3662,7 @@ rule("Subroutine CreateGlobalHUD")
 
 	actions
 	{
-		"运行时间"
+		"***original editor credit to peace (T6QQT)***"
 		If(Current Game Mode == Game Mode(Skirmish));
 			Set Objective Description(All Players(All Teams), Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Custom String(
 				"시간: {0} 분 {1} 초 경과", Round To Integer(Total Time Elapsed / 60, Down), Round To Integer(Total Time Elapsed % 60, Down)) : (
@@ -3750,8 +3678,6 @@ rule("Subroutine CreateGlobalHUD")
 				"Elapsed time {0} minutes {1} seconds", Round To Integer(Total Time Elapsed / 60, Down), Round To Integer(
 				Total Time Elapsed % 60, Down))), Null, Top, 0, Null, Color(White), Null, Visible To and String, Default Visibility);
 		End;
-		Create Effect(Local Player.bhop ? Local Player : Null, Ana Nano Boosted Effect, Null, Local Player, 1,
-			Visible To Position and Radius);
 		Create HUD Text(All Players(All Teams), Null, Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Custom String(
 			"제작자: {0}\n코드: {1}", Global.CreatorAndCode[0] ? Global.CreatorAndCode[0] : Custom String("익명"),
 			Global.CreatorAndCode[1] ? Global.CreatorAndCode[1] : Custom String("아직")) : (Custom String("{0}", Hero(Mercy))
@@ -3855,23 +3781,35 @@ rule("Subroutine CreateGlobalHUD")
 				"－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), Global.Config[26], Left, -1 * 900, Null, Null, Global.Config[27], Visible To,
 				Default Visibility);
 		Else;
-			Create HUD Text(Host Player, Null, Array(Custom String(""), Custom String(
+			Create HUD Text(Host Player, Null, Array(Custom String(""), Custom String("CONTROLS:{0}", Custom String(
+                "\nExtra options mode | Crouch + Jump [STAFF]\nKill Bot Refresh Mode | Crouch + Jump [GUN]")), 
+                Custom String("CONTROLS:"), Custom String("CONTROLS:"), 
+                Custom String("CONTROLS:"), Custom String("PLAY MODE"), Custom String("REFRESH SECTION{0}",
+				Custom String("\nCheckpoint mode | Crouch + Jump [GUN]\nExtra options mode | Crouch + Jump [STAFF]")),
+				Custom String("EXTRA OPTIONS{0}", Custom String("\nCheckpoint mode | Crouch + Jump [STAFF]\nKill Bot Refresh mode | Crouch + Jump [GUN]")))[Host Player.editMode], 
+				Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), 
+                Left, 100, Null, Color(Sky Blue), Null, Visible To Sort Order String and Color, Default Visibility);
+            Create HUD Text(Host Player, Null, Array(Custom String(""), Custom String(
 				"Create Point | Interact + Primary Fire\nInsert Point | Interact + Melee{0}", Custom String(
 				"\nSelect Point | Rez + Primary / Secondary Fire\nMove Point | Interact + Rez{0}",
-				Custom String("\nResurrect Bot | Interact + Reload{0}", Custom String("\nDelete Point | Interact + Secondary Fire [GUN]{0}",
+				Custom String("\nCreate Bot | Melee + Primary Fire [STAFF]\nResurrect Bot | Interact + Reload{0}", 
+                Custom String("\nDelete Bot | Melee + Secondary Fire [STAFF]\nRefresh GA after REZ | Interact + Ability 1 [STAFF]{0}", 
+                Custom String("\nCreate Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
+                Custom String("\nRefresh GA after KILL | Interact + Ability 1 [GUN]{0}",
+                Custom String("\nDelete Point | Interact + Secondary Fire [GUN]{0}",
 				Array Contains(Array(Map(Busan), Map(Ilios), Map(Lijiang Tower), Map(Lijiang Tower), Map(Nepal), Map(Oasis)), Current Map)
-				? Custom String("\nTeleport Other Map | Hold Interact") : Custom String(""))))), Custom String(
+				? Custom String("\nTeleport Other Map | Hold Interact") : Custom String("")))))))), Custom String(
 				"Create Orb | Interact + Primary Fire\nSelect Orb | Rez + Primary / Secondary Fire {0}", Custom String(
 				"\nMove Position | Reload + Primary / Secondary Fire\nCreate Bot | Melee + Primary Fire\nDelete Bot | Melee + Secondary Fire{0}",
-				Custom String("\nResurrect Bot | Interact + Melee{0}", Custom String("\nDelete Orb | Interact + Secondary Fire [GUN]")))),
+				Custom String("\nResurrect Bot | Interact + Melee\nRefresh GA after REZ | Interact + Ability 1{0}", Custom String("\nDelete Orb | Interact + Secondary Fire [GUN]")))),
 				Custom String("Create Sphere | Interact + Primary Fire\nSelect Sphere | Rez + Primary / Secondary Fire{0}", Custom String(
-				"\nMove Position | Reload + Primary / Secondary Fire{0}", Custom String(
+				"\nMove Position | Reload + Primary / Secondary Fire\nAdjust Level | Jump + Melee + Primary / Secondary Fire{0}", Custom String(
 				"\nDelete Sphere | Interact + Secondary Fire [GUN]"))), Custom String(
 				"Create Cloud | Interact + Primary Fire\nSelect Cloud | Rez + Primary / Secondary Fire{0}", Custom String(
-				"\nMove Position | Reload + Primary / Secondary Fire{0}", Custom String(
+				"\nMove Position | Reload + Primary / Secondary Fire\nAdjust Radius | Jump + Melee + Primary / Secondary Fire{0}", Custom String(
 				"\nDelete Cloud | Interact + Secondary Fire [GUN]"))), Custom String(
-				"CONTROLS:\nSelect Point | Rez + Melee + Prim. / Secon. Fire{0}", 
-                Custom String("\nRestart: Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
+				"\nSelect Point | Rez + Melee + Prim. / Secon. Fire{0}", 
+                Custom String("\nRestart | Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
                 : Custom String("Ultimate"))), Custom String("Create Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
                 Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
                 Custom String("\nResurrect Bot | Interact + Reload"))), Custom String("REZ on goal | Interact + Reload\nBot crouching | Melee + Rez{0}",
@@ -3880,17 +3818,6 @@ rule("Subroutine CreateGlobalHUD")
 				Custom String("\nAdjust Radius | Jump + Melee + Prim. / Secon. Fire [GUN]")))))[Host Player.editMode], 
                 Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"),
 				Left, 101, Null, Color(Rose), Null, Visible To Sort Order String and Color, Default Visibility);
-            Create HUD Text(Host Player, Null, Array(Custom String(""), Custom String("CONTROLS:{0}", Custom String("\nCreate Bot | Melee + Primary Fire [STAFF]\nDelete Bot | Melee + Secondary Fire [STAFF]{0}", 
-                Custom String("\nCreate Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
-                Custom String("\nRefresh GA after REZ | Interact + Ability 1 [STAFF]\nRefresh GA after KILL | Interact + Ability 1 [GUN]{0}", 
-                Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nExtra options mode | Crouch + Jump [STAFF]\nKill Bot Refresh Mode | Crouch + Jump [GUN]")))))), 
-                Custom String("CONTROLS:\nRefresh GA after REZ | Interact + Ability 1"), Custom String("CONTROLS:\nAdjust Radius | Jump + Melee + Primary / Secondary Fire"), 
-                Custom String("CONTROLS:\nAdjust Level | Jump + Melee + Primary / Secondary Fire"), Custom String("PLAY MODE"), Custom String("REFRESH SECTION{0}",
-				Custom String("\nCheckpoint mode | Crouch + Jump [GUN]\nExtra options mode | Crouch + Jump [STAFF]")),
-				Custom String("EXTRA OPTIONS{0}", Custom String("\nCheckpoint mode | Crouch + Jump [STAFF]\nKill Bot Refresh mode | Crouch + Jump [GUN]")))[Host Player.editMode], 
-				Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), 
-                Left, 100, Null, Color(Sky Blue), Null, Visible To Sort Order String and Color, Default Visibility);
 			Create HUD Text(Host Player, Null, Custom String("Current Mode | {0} {1} \nExport data | {2}", Array(
 				Custom String(""), Custom String("Checkpoint"), Custom String("Orb"), Custom String("Sphere"), Custom String("Cloud"), Custom String("Play"), Custom String("Refresh"), Custom String("Extra Options"))
 				[Host Player.editMode], Host Player.editMode >= 6 ? Custom String("({0} + {1} to Switch)", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump))) : 
@@ -3963,6 +3890,7 @@ rule("Subroutine CreatePlayerHUDAndEffects")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Create In-World Text(All Players(All Teams), Custom String("{0}  {1}",
 			Event Player.playerNickname, Global.EditMode ? Event Player.checkpoint : Event Player.displayedCheckpoint), Event Player,
 			1.300, Do Not Clip, Visible To Position String and Color, Event Player.playerColor, Default Visibility);
@@ -4048,6 +3976,7 @@ rule("Subroutine TeleportToCurrentCheckpoint")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Call Subroutine(CancelAbilityAndMomentum);
 		Event Player.mistake += Event Player.checkpoint != 0 && !Event Player.freeMode && Distance Between(Event Player,
 			Event Player.checkpointA[0]) > Event Player.checkpointA[1] ? 1 : 0;
@@ -4077,6 +4006,7 @@ rule("Subroutine ContinueTiming")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(
 			!Global.EditMode && !Event Player.finished && !Event Player.freeMode && !Event Player.cheat && Event Player.leaveOriginalCheckpoint);
 			Chase Player Variable At Rate(Event Player, time, 16200, 1, None);
@@ -4094,6 +4024,7 @@ rule("Subroutine GetCurrentCheckpoint")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Event Player.checkpointA = Global.Checkpoint[Event Player.checkpoint] ? Global.Checkpoint[Event Player.checkpoint] : Null;
 		Event Player.checkpointB = Global.Checkpoint[Event Player.checkpoint + 1] ? Global.Checkpoint[Event Player.checkpoint + 1] : Null;
 		Event Player.displayedCheckpoint = Event Player.checkpoint - Count Of(Filtered Array(Global.Checkpoint,
@@ -4117,6 +4048,7 @@ rule("Subroutine  SetCurrentAbilities")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Event Player.checkpointA[2]);
 			Allow Button(Event Player, Button(Crouch));
 		Else;
@@ -4149,6 +4081,7 @@ rule("Subroutine TeleportCurrentBot")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Teleport(Event Player.targetBot, Event Player.checkpointA[3][0] ? Event Player.checkpointA[3][0] : Nearest Walkable Position(
 			Vector(-500, -500, -500)));
 		If(Event Player.checkpointA[9]);
@@ -4178,6 +4111,7 @@ rule("Subroutine  DisplayCurrentAbilityMsgs")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Abort If(Event Player.checkpointA[5] || !Event Player.checkpointB);
 		If(Count Of(Event Player.currentOrb) == 1);
 			Small Message(Event Player, Global.Config[20] ? Custom String("   {0}", Global.Config[20]) : (Custom String("{0}", Hero(Mercy)) == Custom String("메르시")
@@ -4221,6 +4155,7 @@ rule("Subroutine  CreateCurrentEffects")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Destroy Effect(Event Player.orbEffects);
 		Destroy Effect(Event Player.botEffects);
 		Event Player.orbEffects = Empty Array;
@@ -4300,6 +4235,7 @@ rule("Subroutine CreateCurrentWorldText")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Destroy In-World Text(Event Player.currentWorldText);
 		If(Global.WorldTexts[Event Player.displayedCheckpoint] && !Event Player.checkpointA[5]);
 			Create In-World Text(Event Player, Global.WorldTexts[Event Player.displayedCheckpoint][0],
@@ -4321,6 +4257,7 @@ rule("Subroutine DisplayCurrentCustomBigMsgs")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Global.BigMsgs[Event Player.displayedCheckpoint] && !Event Player.checkpointA[5]);
 			Event Player.currentBigMsg = Filtered Array(Global.BigMsgs[Event Player.displayedCheckpoint], Current Array Element);
 			While(Count Of(Event Player.currentBigMsg) > 0);
@@ -4343,6 +4280,7 @@ rule("Subroutine DisplayCurrentCustomSmallMsgs")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Global.SmallMsgs[Event Player.displayedCheckpoint] && !Event Player.checkpointA[5]);
 			Event Player.currentSmallMsg = Filtered Array(Global.SmallMsgs[Event Player.displayedCheckpoint], Current Array Element);
 			While(Count Of(Event Player.currentSmallMsg) > 0);
@@ -4365,6 +4303,7 @@ rule("Subroutine EnableAllAbilities")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Allow Button(Event Player, Button(Crouch));
 		Set Ability 1 Enabled(Event Player, True);
 		Set Ability 2 Enabled(Event Player, True);
@@ -4383,6 +4322,7 @@ rule("Subroutine  CancelAbilityAndMomentum")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Cancel Primary Action(Event Player);
 		Apply Impulse(Event Player, Up, 0, To World, Cancel Contrary Motion XYZ);
 		Wait(0.016, Restart When True);
@@ -4401,6 +4341,7 @@ rule("Subroutine ValidationPlayerData")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Index Of Array Value(Global.PlayersData, Custom String("{0}", Event Player)) > -1);
 			Event Player.checkpoint = First Of(Filtered Array(Global.PlayersData, Current Array Element[0] == Custom String("{0}",
 				Event Player)))[1];
@@ -4429,6 +4370,7 @@ rule("Subroutine EditPlayerData")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		Global.PlayersData[Event Player.dataIndex] = Event Player.checkpoint < Count Of(Global.Checkpoint) - 1 ? Array(Custom String("{0}",
 			Event Player), Event Player.checkpoint, Event Player.time, Event Player.mistake) : Array(Custom String("{0}", Event Player), 0,
 			0, 0);
@@ -4445,6 +4387,7 @@ rule("Subroutine TempSavePlayerData")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(!Global.EditMode);
 			If(!Event Player.cheat);
 				Stop Chasing Player Variable(Event Player, time);
@@ -4487,6 +4430,7 @@ rule("Subroutine ChooseCheckpoint")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			Event Player.checkpoint += Event Player.checkpoint == Count Of(Global.Checkpoint) - 1 ? 1 - Count Of(Global.Checkpoint) : 1;
 		Else;
@@ -4505,6 +4449,7 @@ rule("Subroutine SkipOrBackCheckpoint")
 
 	actions
 	{
+		"***original editor credit to peace (T6QQT)***"
 		If(!Global.EditMode);
 			If(Event Player.checkpoint == Event Player.playerData[0]);
 				Event Player.cheat = False;
