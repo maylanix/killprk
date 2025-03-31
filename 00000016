@@ -3521,7 +3521,7 @@ rule("Subroutine  InitializeGlobalVariables")
 			Custom String("{0} Exit", Ability Icon String(Hero(Kiriko), Button(Ability 2))), Color(White)), Array(Custom String("maylanix"), 
 			Custom String("maylanix {0}", Icon String(Skull)), Custom Color(255, 153, 187, 255)), Array(Custom String("EggsBenna"), Custom String("egg {0}", Ability Icon String(Hero(
 			Ashe), Button(Ultimate))), Custom Color(255, 153, 187, 255)), Array(Custom String("localmvthman"), Custom String("localmvthman {0}", Ability Icon String(Hero(
-			Illari), Button(Ultimate))), Custom Color(253, 249, 80, 255)), Array(Custom String("OnMyKnees"), Custom String("onmyknees {0}", Ability Icon String(Hero(
+			Illari), Button(Ultimate))), Custom Color(253, 249, 80, 255)), Array(Custom String("OnMyKnees"), Custom String("minna {0}", Ability Icon String(Hero(
 			Hanzo), Button(Ultimate))), Custom Color(255, 153, 187, 255)), Array(Custom String("clementine"), Custom String("clementine {0}", Ability Icon String(Hero(
 			Mercy), Button(Ability 1))), Custom Color(255, 153, 102, 255)), Array(Custom String("GigaMercy"), Custom String("gigamercy {0}", Ability Icon String(Hero(
 			Mercy), Button(Ability 1))), Custom Color(251, 134, 28, 255)), Array(Custom String("tealover"), Custom String("tealover ♡"), Custom Color(255, 153, 204, 255)), 
