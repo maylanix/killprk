@@ -9,14 +9,14 @@ assignees: maylanix
 
 > [!CAUTION]
 > **Observed issue:**
-> [Detailed explanation of your issue.]
+> Detailed explanation of your issue.
 
 > [!TIP]
 > **Expected result:**
-> [What you expected to happen.]
+> What you expected to happen.
 
 > [!IMPORTANT]
-> **Reproduction rate (how often it happens):** [000]%
+> **Reproduction rate (how often it happens):** %
 > **Map code (if applicable):** 
 
 **Steps to reproduce:**
@@ -25,6 +25,6 @@ assignees: maylanix
 3. etc...
 
 > [!NOTE]
-> [Any additional notes you may have.]
+> Any additional notes you may have.
 
 If applicable, add screenshots/videos to help explain your issue.
