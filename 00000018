@@ -1961,6 +1961,7 @@ rule("Crouch disabled tips")
 		Event Player.checkpointA[2] == False;
 		Event Player.finished == False;
 		Event Player.freeMode == False;
+		(Global.EditMode && Count Of(Global.Checkpoint) == 0) == False;
 	}
 
 	actions
@@ -4049,7 +4050,7 @@ rule("Subroutine  SetCurrentAbilities")
 	actions
 	{
 		"***original editor credit to peace (T6QQT)***"
-		If(Event Player.checkpointA[2]);
+		If(Event Player.checkpointA[2] || (Global.EditMode && Count Of(Global.Checkpoint) == 0));
 			Allow Button(Event Player, Button(Crouch));
 		Else;
 			Disallow Button(Event Player, Button(Crouch));
