@@ -301,6 +301,22 @@ rule("<fgffb3b3ff>♡ ##—— setup ——> ♡")
 			Custom String("{0} rez on checkpoint disabled", Ability Icon String(Hero(Mercy), Button(Ability 2))));
         "DISTANCE TO REZ TEXT — set the color"
         Global.gamer[1] = Custom Color(255, 179, 204, 255);
+		"EDITOR CREDIT — set the color"
+		Global.Config[52] = Array(224, 204, 255);
+		"MISTAKES & TIME — set the color"
+		Global.Config[53] = Custom Color(240, 230, 255, 255);
+		"HERO SELECT — set the color"
+		Global.Config[54] = Custom Color(240, 230, 255, 255);
+		"CHARACTER CONTROLS (voice, body size, etc...) — set the color"
+		Global.Config[55] = Custom Color(224, 204, 255, 255);
+		"DOUBLE CLICK INTERACT — set the color"
+		Global.Config[56] = Custom Color(209, 179, 255, 200);
+		"CONTROLS: SECTION 1 — set the color"
+		Global.Config[57] = Custom Color(240, 230, 255, 255);
+		"CONTROLS: SECTION 2 — set the color"
+		Global.Config[58] = Custom Color(224, 204, 255, 150);
+		"CONTROLS: SECTION 3 — set the color"
+		Global.Config[59] = Custom Color(209, 179, 255, 255);
     }
 }
 
@@ -3697,7 +3713,7 @@ rule("Subroutine CreateGlobalHUD")
 			: (Custom String("{0}", Hero(Mercy)) == Custom String("天使") ? Custom String("{0} 双击互动键（{1}）查看快捷键列表", Ability Icon String(Hero(
 			Torbjörn), Button(Ability 2)), Input Binding String(Button(Interact))) : Custom String(
 			"{0} Double click ({1}) Show or hide controls", Ability Icon String(Hero(Torbjörn), Button(Ability 2)), Input Binding String(
-			Button(Interact)))), Null, Right, 98, Null, Custom Color(209, 179, 255, 200), Null, Visible To and String, Default Visibility);
+			Button(Interact)))), Null, Right, 98, Null, Global.Config[56], Null, Visible To and String, Default Visibility);
 		Create HUD Text(Global.ShowHotKeyPlayers, Null, Custom String("{0}\n{1}",
 			Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Custom String("다음 레벨 보기 : {0} + {1}\n{2}", Input Binding String(
 			Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Custom String("빠른 리젠 : {0}\n{1}", Input Binding String(
@@ -3723,7 +3739,7 @@ rule("Subroutine CreateGlobalHUD")
 			Custom String(" + {0}", Input Binding String(Button(Ability 2))) : Custom String("")))))))), Custom String("－－－－－－－－－－－－－－－－{0}",
 			String Length(Input Binding String(Button(Interact))) > 1 ? (String Length(Input Binding String(Button(Interact))) > 3 ? (
 			String Length(Input Binding String(Button(Interact))) > 5 ? Custom String("－－－－－－") : Custom String("－－－")) : Custom String(
-			"－－")) : Custom String(""))), Null, Right, 100, Null, Custom Color(240, 230, 255, 255), Null, Visible To and String,
+			"－－")) : Custom String(""))), Null, Right, 100, Null, Global.Config[57], Null, Visible To and String,
 			Default Visibility);
 		Create HUD Text(Filtered Array(Global.ShowHotKeyPlayers, Current Array Element.freeMode || Current Array Element.finished), Null, Custom String("{0}\n{1}", Custom String("{0}", Hero(
 			Mercy)) == Custom String("메르시") ? Custom String("앞으로 텔포 : Hold {0}\n{1}", Input Binding String(Button(Reload)), Custom String(
@@ -3742,7 +3758,7 @@ rule("Subroutine CreateGlobalHUD")
 			Input Binding String(Button(Interact)), Input Binding String(Button(Reload))) : Custom String(""))))), Custom String(
 			"－－－－－－－－－－－－－－－－{0}", String Length(Input Binding String(Button(Interact))) > 1 ? (String Length(Input Binding String(Button(
 			Interact))) > 3 ? (String Length(Input Binding String(Button(Interact))) > 5 ? Custom String("－－－－－－") : Custom String("－－－"))
-			: Custom String("－－")) : Custom String(""))), Null, Right, 101, Null, Custom Color(224, 204, 255, 150), Null,
+			: Custom String("－－")) : Custom String(""))), Null, Right, 101, Null, Global.Config[58], Null,
 			Visible To and String, Default Visibility);
 		Create HUD Text(Filtered Array(Global.ShowHotKeyPlayers, !Global.EditMode || Current Array Element != Host Player), Null, Custom String("{0}\n{1}", Custom String("{0}", Hero(Mercy))
 			== Custom String("메르시") ? Custom String("다음 레벨 : {0} + {1} + {2}", Input Binding String(Button(Ability 2)),
@@ -3757,12 +3773,12 @@ rule("Subroutine CreateGlobalHUD")
 			Custom String("{0} + {1}", Input Binding String(Button(Melee)), Input Binding String(Button(Secondary Fire)))))),
 			Custom String("－－－－－－－－－－－－－－－－{0}", String Length(Input Binding String(Button(Interact))) > 1 ? (String Length(
 			Input Binding String(Button(Interact))) > 3 ? (String Length(Input Binding String(Button(Interact))) > 5 ? Custom String(
-			"－－－－－－") : Custom String("－－－")) : Custom String("－－")) : Custom String(""))), Null, Right, 102, Null, Custom Color(209, 179, 255, 255), Null,
+			"－－－－－－") : Custom String("－－－")) : Custom String("－－")) : Custom String(""))), Null, Right, 102, Null, Global.Config[59], Null,
 			Visible To and String, Default Visibility);
 		If(!Global.EditMode);
 			Create HUD Text(All Players(All Teams), Null, Custom String("{0} {1}", Ability Icon String(Hero(Mercy), Button(Ultimate)),
 				Custom String("made with a modified version of peace's editor [???] {0}", Ability Icon String(Hero(Mercy),
-				Button(Ultimate)))), Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), Left, -999, Null, Custom Color(224, 204, 255, 200), Null, Visible To and String, Default Visibility);
+				Button(Ultimate)))), Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), Left, -999, Null, Custom Color(Global.Config[52][0], Global.Config[52][1], Global.Config[52][2], 255), Null, Visible To and String, Default Visibility);
 			"TOP5"
 			Create HUD Text(Global.Top5 ? All Players(All Teams) : Null, Null, Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"),
 				Global.Config[24] ? Global.Config[24] : Custom String("Today's Top {0}", Count Of(Global.Top5)), Left, -991, Null, Null,
@@ -3938,11 +3954,11 @@ rule("Subroutine CreatePlayerHUDAndEffects")
 				? Custom String("          失误: {0} 次\n　　　　　　　　　　时间: {1} 秒", Event Player.cheat ? Custom String("∞") : Event Player.mistake,
 				Event Player.cheat ? Custom String("∞") : Event Player.time) : Custom String(
 				"           Mistakes: {0} Times\n           Time: {1} Seconds", Event Player.cheat ? Custom String("∞") : Event Player.mistake,
-				Event Player.cheat ? Custom String("∞") : Event Player.time)), Null, Right, 1, Null, Custom Color(240, 230, 255, 255), Null, Visible To and String,
+				Event Player.cheat ? Custom String("∞") : Event Player.time)), Null, Right, 1, Null, Global.Config[53], Null, Visible To and String,
 				Default Visibility);
 			Create HUD Text(Event Player.finished ? Event Player : Null, Null, Null, Custom String("  {0} {1}", Hero Icon String(
 				All Heroes[Event Player.chooseHero]), Custom String("{0} {1} - {2}", String("Hero"), Event Player.chooseHero + 1,
-				All Heroes[Event Player.chooseHero])), Right, 5, Null, Null, Custom Color(240, 230, 255, 255), Visible To and String, Default Visibility);
+				All Heroes[Event Player.chooseHero])), Right, 5, Null, Null, Global.Config[54], Visible To and String, Default Visibility);
 			Create HUD Text(Event Player.finished ? Event Player : Null, Null, Custom String("{0}", Hero(Mercy)) == Custom String("메르시")
 				? Custom String("        Voice: {0}{1}  {2}", Event Player.voice, Event Player.voice % 1 == 0 ? Custom String(".00")
 				: Custom String(""), Custom String("Trajectory: {0}{1}\r\n{2}", Event Player.projectile / 100,
@@ -3959,7 +3975,7 @@ rule("Subroutine CreatePlayerHUDAndEffects")
 				Event Player.projectile / 100, Event Player.projectile % 100 == 0 ? Custom String(".00") : Custom String(""), Custom String(
 				"        Body size: {0}{1}  {2}", Event Player.bodySize, Event Player.bodySize % 1 == 0 ? Custom String(".00") : Custom String(
 				""), Custom String("Barrier: {0}{1}\n ", Event Player.barrierSize, Event Player.barrierSize % 1 == 0 ? Custom String(".00")
-				: Custom String("")))))), Null, Right, 6, Custom Color(224, 204, 255, 255), Custom Color(224, 204, 255, 255), Custom Color(224, 204, 255, 255), Visible To and String, Default Visibility);
+				: Custom String("")))))), Null, Right, 6, Global.Config[55], Global.Config[55], Global.Config[55], Visible To and String, Default Visibility);
 		End;
 			Create In-World Text(Event Player.checkpointB[0] ? Event Player : Null,
 				Global.Config[2], Event Player.checkpointB[0] + Vector(0, 0.200, 0),
