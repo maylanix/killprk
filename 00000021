@@ -906,22 +906,6 @@ rule("Create / Delete bot")
 			Else If(Event Player.checkpointA[9] && Is Dead(Event Player.enmy));
 				Resurrect(Event Player.enmy);
             End;
-        Else If(Event Player.editMode == 6 && Is Button Held(Event Player, Button(Ability 2)));
-            If(Weapon(Event Player) == 1);
-                Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
-                True, Position Of(Event Player), False, Current Array Element[4]) : Current Array Element);
-                Play Effect(Event Player, Buff Impact Sound, Null, Event Player, 100);
-				Call Subroutine(GetCurrentCheckpoint);
-				Call Subroutine(TeleportBotTokillRefreshPosition);
-            Else;
-		    	Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
-			    	Global.enmyrfdefault, False, False, Global.rezrefresh) : Current Array Element);
-                Play Effect(Event Player, Debuff Impact Sound, Null, Event Player, 100);
-				Call Subroutine(GetCurrentCheckpoint);
-				Call Subroutine(TeleportCurrentBot);
-    		End;
-			Small Message(All Players(All Teams), Event Player.checkpointA[9][2] ? Custom String("   Created/Moved Refresh Bot") : Custom String(
-				"   Refresh Bot Deleted — Resetting refresh to default"));
 		Else If(Event Player.editMode == 7 && Is Button Held(Event Player, Button(Ability 2)));
 			Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 12 ? !Current Array Element : Current Array Element);
 			Call Subroutine(GetCurrentCheckpoint);
@@ -931,6 +915,24 @@ rule("Create / Delete bot")
 				"   Enabled bot crouching for this level") : Custom String(
 				"   Disabled bot crouching for this level"));
 			Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
+		Else If(Event Player.editMode == 6);
+			If(Weapon(Event Player) == 1 && (Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))));
+            	If(Is Button Held(Event Player, Button(Primary Fire)));
+            	    Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
+                	True, Position Of(Event Player), False, Current Array Element[4]) : Current Array Element);
+                	Play Effect(Event Player, Buff Impact Sound, Null, Event Player, 100);
+					Call Subroutine(GetCurrentCheckpoint);
+					Call Subroutine(TeleportBotTokillRefreshPosition);
+            	Else;
+		    		Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
+			    		Global.enmyrfdefault, False, False, Global.rezrefresh) : Current Array Element);
+                	Play Effect(Event Player, Debuff Impact Sound, Null, Event Player, 100);
+					Call Subroutine(GetCurrentCheckpoint);
+					Call Subroutine(TeleportCurrentBot);
+    			End;
+				Small Message(All Players(All Teams), Event Player.checkpointA[9][2] ? Custom String("   Created/Moved Refresh Bot") : Custom String(
+					"   Refresh Bot Deleted — Resetting refresh to default"));
+			End;
 		Else If(Event Player.editMode == 1);
             If(Weapon(Event Player) == 1 && (Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))));
 			    If(Is Button Held(Event Player, Button(Primary Fire)));
@@ -3103,6 +3105,10 @@ rule("Subroutine ErrorWarningmsgs")
 				Small Message(Event Player, Custom String("   There is no orb yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 				Global.Error = True;
+			Else If(Event Player.editMode == 6 && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
+                Small Message(Event Player, Custom String("   Cannot add bot -- add enemy bot first"));
+                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
+			    Global.Error = True;
 			End;
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
 			If(Event Player.editMode == 2 && Count Of(Event Player.currentOrb) == 0);
@@ -3117,6 +3123,10 @@ rule("Subroutine ErrorWarningmsgs")
 				Small Message(Event Player, Custom String("   There is no cloud yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 				Global.Error = True;
+			If(Event Player.editMode == 6 && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
+                Small Message(Event Player, Custom String("   Nothing to delete"));
+                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
+			    Global.Error = True;
 			End;
 		Else If(Is Button Held(Event Player, Button(Reload)));
 			If(Event Player.editMode == 1 && !Event Player.checkpointA[3][0] && (Weapon(Event Player) == 1));
@@ -3152,15 +3162,7 @@ rule("Subroutine ErrorWarningmsgs")
 				Global.Error = True;
 			End;
         Else If(Is Button Held(Event Player, Button(Ability 2)) && Is Button Held(Event Player, Button(Melee)));
-            If(Event Player.editMode == 6 && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
-                Small Message(Event Player, Custom String("   Cannot add bot -- add enemy bot first"));
-                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
-			    Global.Error = True;
-            Else If(Event Player.editMode == 6 && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
-                Small Message(Event Player, Custom String("   Nothing to delete"));
-                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
-			    Global.Error = True;
-			Else If(Event Player.editMode == 7 && !Event Player.checkpointA[3]);
+			If(Event Player.editMode == 7 && !Event Player.checkpointA[3]);
 				Small Message(Event Player, Custom String("   There is no target bot yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			    Global.Error = True;
@@ -3760,7 +3762,7 @@ rule("Subroutine CreateGlobalHUD")
 				"\nSelect Point | Rez + Melee + Prim. / Secon. Fire{0}", 
                 Custom String("\nRestart | Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
                 : Custom String("Ultimate"))), Custom String("Create Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
-                Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
+                Custom String("\nCreate Refresh Bot | Melee + Primary Fire [STAFF]\nDelete Refresh Bot | Melee + Secondary Fire [STAFF]{0}", 
                 Custom String("\nResurrect Bot | Interact + Reload"))), Custom String("REZ on goal | Interact + Reload\nBot crouching | Melee + Rez{0}",
 				Custom String("\nFree walking | Interact + Resurrect\nSwitch Crouch | Interact + Crouch{0}", 
 				Custom String("\nUnlimited Ga | Interact + Ultimate\nSwitch Teleport | Interact + Jump{0}", 
