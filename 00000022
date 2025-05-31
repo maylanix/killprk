@@ -24,7 +24,7 @@ settings
 		{
 			enabled maps
 			{
-				Route 66 972777519512068153
+				Paris 972777519512068292
 			}
 		}
 
@@ -59,11 +59,6 @@ settings
 			No Ammunition Requirement: On
             Passive Health Regeneration: On
 			Spawn With Ultimate Ready: On
-
-			Mei
-			{
-				Ice Wall: Off
-			}
 
 			enabled heroes
 			{
@@ -158,7 +153,6 @@ variables
 		14: bestRecord
 		15: playerData
 		16: tempCurrentOrb
-		17: chooseHero
 		18: rezorb
 		20: isSetAbilities
 		21: voice
@@ -301,6 +295,20 @@ rule("<fgffb3b3ff>♡ ##—— setup ——> ♡")
 			Custom String("{0} rez on checkpoint disabled", Ability Icon String(Hero(Mercy), Button(Ability 2))));
         "DISTANCE TO REZ TEXT — set the color"
         Global.gamer[1] = Custom Color(255, 179, 204, 255);
+		"EDITOR CREDIT — set the color"
+		Global.Config[52] = Array(224, 204, 255);
+		"MISTAKES & TIME — set the color"
+		Global.Config[53] = Custom Color(240, 230, 255, 255);
+		"CHARACTER CONTROLS (voice, body size, etc...) — set the color"
+		Global.Config[54] = Custom Color(224, 204, 255, 255);
+		"DOUBLE CLICK INTERACT — set the color"
+		Global.Config[55] = Custom Color(209, 179, 255, 200);
+		"CONTROLS: SECTION 1 — set the color"
+		Global.Config[56] = Custom Color(240, 230, 255, 255);
+		"CONTROLS: SECTION 2 — set the color"
+		Global.Config[57] = Custom Color(224, 204, 255, 150);
+		"CONTROLS: SECTION 3 — set the color"
+		Global.Config[58] = Custom Color(209, 179, 255, 255);
     }
 }
 
@@ -619,7 +627,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 				"0, checkponit position\n1, checkpoint radius\n2, crouch\n3, bot, default empty array(BotVector, NeedResurrect, RefreshAbility1)\n4, unlimited ga\n5, teleport, defalut false\n6, orb, default empty array\n7, sphere, default empty array\n8, cloud, default empty array"
 				Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk, False);
+			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh, False), Global.rezonpoint, Global.freewalk, False);
                 "9, enemy bot, default empty array(botvector, refreshability1 on kill, refresh vector)"
 				Event Player.checkpoint = Count Of(Global.Checkpoint) - 1;
 				Call Subroutine(GetCurrentCheckpoint);
@@ -824,7 +832,7 @@ rule("Insert point")
 		Global.Checkpoint = Array Slice(Global.Checkpoint, 0, Event Player.checkpoint + 1);
 		Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh), Global.rezonpoint, Global.freewalk, False);
+			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh, False), Global.rezonpoint, Global.freewalk, False);
 		Modify Global Variable(Checkpoint, Append To Array, Global.TempArray);
 		Event Player.checkpoint += 1;
 		Call Subroutine(GetCurrentCheckpoint);
@@ -898,31 +906,44 @@ rule("Create / Delete bot")
 			Else If(Event Player.checkpointA[9] && Is Dead(Event Player.enmy));
 				Resurrect(Event Player.enmy);
             End;
-        Else If(Event Player.editMode == 6 && Is Button Held(Event Player, Button(Ability 2)));
-            If(Weapon(Event Player) == 1);
-                Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
-                True, Position Of(Event Player), False, Current Array Element[4]) : Current Array Element);
-                Play Effect(Event Player, Buff Impact Sound, Null, Event Player, 100);
-				Call Subroutine(GetCurrentCheckpoint);
-				Call Subroutine(TeleportBotTokillRefreshPosition);
-            Else;
-		    	Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
-			    	Global.enmyrfdefault, False, False, Global.rezrefresh) : Current Array Element);
-                Play Effect(Event Player, Debuff Impact Sound, Null, Event Player, 100);
+		Else If(Array Contains(Array(6, 7), Event Player.editMode) && Is Button Held(Event Player, Button(Ability 2)));
+			If(Event Player.editMode == 7);
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 12 ? !Current Array Element : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
 				Call Subroutine(TeleportCurrentBot);
-    		End;
-			Small Message(All Players(All Teams), Event Player.checkpointA[9][2] ? Custom String("   Created/Moved Refresh Bot") : Custom String(
-				"   Refresh Bot Deleted — Resetting refresh to default"));
-		Else If(Event Player.editMode == 7 && Is Button Held(Event Player, Button(Ability 2)));
-			Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 12 ? !Current Array Element : Current Array Element);
-			Call Subroutine(GetCurrentCheckpoint);
-			Call Subroutine(TeleportCurrentBot);
-			Wait(0.100, Ignore Condition);
-			Small Message(All Players(All Teams), Event Player.checkpointA[12] ? Custom String(
-				"   Enabled bot crouching for this level") : Custom String(
-				"   Disabled bot crouching for this level"));
+				Wait(0.100, Ignore Condition);
+				Small Message(All Players(All Teams), Event Player.checkpointA[12] ? Custom String(
+					"   Enabled bot crouching for this bot") : Custom String(
+					"   Disabled bot crouching for this bot"));
+			Else If(Event Player.editMode == 6);
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
+			    	Current Array Element[1], Current Array Element[2], Current Array Element[3], Current Array Element[4], !Current Array Element[5]) : Current Array Element);
+				Call Subroutine(GetCurrentCheckpoint);
+				Call Subroutine(TeleportBotTokillRefreshPosition);
+				Wait(0.100, Ignore Condition);
+				Small Message(All Players(All Teams), Event Player.checkpointA[9][5] ? Custom String(
+					"   Enabled bot crouching for this bot") : Custom String(
+					"   Disabled bot crouching for this bot"));
+			End;
 			Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
+		Else If(Event Player.editMode == 6);
+			If(Weapon(Event Player) == 1 && (Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))));
+            	If(Is Button Held(Event Player, Button(Primary Fire)));
+            	    Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
+                	True, Position Of(Event Player), False, Current Array Element[4]) : Current Array Element);
+                	Play Effect(Event Player, Buff Impact Sound, Null, Event Player, 100);
+					Call Subroutine(GetCurrentCheckpoint);
+					Call Subroutine(TeleportBotTokillRefreshPosition);
+            	Else;
+		    		Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 9 ? Array(Current Array Element[0], 
+			    		Global.enmyrfdefault, False, False, Global.rezrefresh) : Current Array Element);
+                	Play Effect(Event Player, Debuff Impact Sound, Null, Event Player, 100);
+					Call Subroutine(GetCurrentCheckpoint);
+					Call Subroutine(TeleportCurrentBot);
+    			End;
+				Small Message(All Players(All Teams), Event Player.checkpointA[9][2] ? Custom String("   Created/Moved Refresh Bot") : Custom String(
+					"   Refresh Bot Deleted — Resetting refresh to default"));
+			End;
 		Else If(Event Player.editMode == 1);
             If(Weapon(Event Player) == 1 && (Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))));
 			    If(Is Button Held(Event Player, Button(Primary Fire)));
@@ -1961,6 +1982,7 @@ rule("Crouch disabled tips")
 		Event Player.checkpointA[2] == False;
 		Event Player.finished == False;
 		Event Player.freeMode == False;
+		(Global.EditMode && Count Of(Global.Checkpoint) == 0) == False;
 	}
 
 	actions
@@ -2776,65 +2798,6 @@ rule("Interact, teleporting players")
 	}
 }
 
-rule("Primary / Secondary Fire, select hero")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Global.EditMode == False;
-		Event Player.finished == True;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
-	}
-
-	actions
-	{
-		"***original editor credit to peace (T6QQT)***"
-		If(Is Button Held(Event Player, Button(Primary Fire)));
-			Event Player.chooseHero += Event Player.chooseHero == Count Of(All Heroes) - 1 ? 1 - Count Of(All Heroes) : 1;
-		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
-			Event Player.chooseHero -= Event Player.chooseHero == 0 ? 1 - Count Of(All Heroes) : 1;
-		End;
-		Preload Hero(Event Player, All Heroes[Event Player.chooseHero]);
-	}
-}
-
-rule("change hero")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Global.EditMode == False;
-		Event Player.finished == True;
-		Is Button Held(Event Player, Button(Melee)) == True;
-		Is Button Held(Event Player, Button(Interact)) == True;
-		Is Button Held(Event Player, Button(Ability 2)) == False;
-		Hero Of(Event Player) != All Heroes[Event Player.chooseHero];
-	}
-
-	actions
-	{
-		"***original editor credit to peace (T6QQT)***"
-		Play Effect(All Players(Team Of(Event Player)), Brigitte Repair Pack Armor Sound, Null, Event Player, 100);
-		Wait(0.300, Ignore Condition);
-		Abort If(!Event Player.finished);
-		Start Forcing Player To Be Hero(Event Player, All Heroes[Event Player.chooseHero]);
-		Event Player.playerColor = Event Player.playerTittle ? (Event Player.playerTittle[2] == Color(White) ? Custom Color(Random Integer(
-			0, 255), Random Integer(0, 255), Random Integer(0, 255), 255) : Event Player.playerTittle[2]) : Color(White);
-	}
-}
-
 rule("Crouch+Ablitiy2+Primary/Secondary/Melee, control voice")
 {
 	event
@@ -3153,6 +3116,10 @@ rule("Subroutine ErrorWarningmsgs")
 				Small Message(Event Player, Custom String("   There is no orb yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 				Global.Error = True;
+			Else If(Event Player.editMode == 6 && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
+                Small Message(Event Player, Custom String("   Cannot add bot -- add enemy bot first"));
+                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
+			    Global.Error = True;
 			End;
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
 			If(Event Player.editMode == 2 && Count Of(Event Player.currentOrb) == 0);
@@ -3167,6 +3134,10 @@ rule("Subroutine ErrorWarningmsgs")
 				Small Message(Event Player, Custom String("   There is no cloud yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 				Global.Error = True;
+			If(Event Player.editMode == 6 && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
+                Small Message(Event Player, Custom String("   Nothing to delete"));
+                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
+			    Global.Error = True;
 			End;
 		Else If(Is Button Held(Event Player, Button(Reload)));
 			If(Event Player.editMode == 1 && !Event Player.checkpointA[3][0] && (Weapon(Event Player) == 1));
@@ -3202,15 +3173,7 @@ rule("Subroutine ErrorWarningmsgs")
 				Global.Error = True;
 			End;
         Else If(Is Button Held(Event Player, Button(Ability 2)) && Is Button Held(Event Player, Button(Melee)));
-            If(Event Player.editMode == 6 && !Event Player.checkpointA[9][0] && (Weapon(Event Player) == 1));
-                Small Message(Event Player, Custom String("   Cannot add bot -- add enemy bot first"));
-                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
-			    Global.Error = True;
-            Else If(Event Player.editMode == 6 && !Event Player.checkpointA[9][1] && (Weapon(Event Player) == 2));
-                Small Message(Event Player, Custom String("   Nothing to delete"));
-                Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
-			    Global.Error = True;
-			Else If(Event Player.editMode == 7 && !Event Player.checkpointA[3]);
+			If(Event Player.editMode == 7 && !Event Player.checkpointA[3]);
 				Small Message(Event Player, Custom String("   There is no target bot yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			    Global.Error = True;
@@ -3398,6 +3361,9 @@ rule("Subroutine  TeleportBotTokillRefreshPosition")
 		If(Event Player.checkpoint[9][3]);
 			Kill(Event Player.targetBot, Null);
 		End;
+		Wait(0.016, Ignore Condition);
+		Start Holding Button(Event Player.checkpointA[9][5] ? Event Player.targetBot : Null, Button(Crouch));
+		Stop Holding Button(!Event Player.checkpointA[9][5] ? Event Player.targetBot : Null, Button(Crouch));
 		Event Player.aura = False;
 	}
 }
@@ -3569,7 +3535,6 @@ rule("Subroutine  InitializePlayerVariables")
 			Event Player.editMode = Global.EditMode ? 1 : 0;
 			Event Player.bestRecord = First Of(Filtered Array(Global.PlayersRecord, Current Array Element[0] == Custom String("{0}",
 				Event Player)))[1];
-			Event Player.chooseHero = 0;
 			Event Player.voice = 1;
 			Event Player.barrierSize = 1;
 			Event Player.projectile = 100;
@@ -3696,7 +3661,7 @@ rule("Subroutine CreateGlobalHUD")
 			: (Custom String("{0}", Hero(Mercy)) == Custom String("天使") ? Custom String("{0} 双击互动键（{1}）查看快捷键列表", Ability Icon String(Hero(
 			Torbjörn), Button(Ability 2)), Input Binding String(Button(Interact))) : Custom String(
 			"{0} Double click ({1}) Show or hide controls", Ability Icon String(Hero(Torbjörn), Button(Ability 2)), Input Binding String(
-			Button(Interact)))), Null, Right, 98, Null, Custom Color(209, 179, 255, 200), Null, Visible To and String, Default Visibility);
+			Button(Interact)))), Null, Right, 98, Null, Global.Config[55], Null, Visible To and String, Default Visibility);
 		Create HUD Text(Global.ShowHotKeyPlayers, Null, Custom String("{0}\n{1}",
 			Custom String("{0}", Hero(Mercy)) == Custom String("메르시") ? Custom String("다음 레벨 보기 : {0} + {1}\n{2}", Input Binding String(
 			Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Custom String("빠른 리젠 : {0}\n{1}", Input Binding String(
@@ -3722,7 +3687,7 @@ rule("Subroutine CreateGlobalHUD")
 			Custom String(" + {0}", Input Binding String(Button(Ability 2))) : Custom String("")))))))), Custom String("－－－－－－－－－－－－－－－－{0}",
 			String Length(Input Binding String(Button(Interact))) > 1 ? (String Length(Input Binding String(Button(Interact))) > 3 ? (
 			String Length(Input Binding String(Button(Interact))) > 5 ? Custom String("－－－－－－") : Custom String("－－－")) : Custom String(
-			"－－")) : Custom String(""))), Null, Right, 100, Null, Custom Color(240, 230, 255, 255), Null, Visible To and String,
+			"－－")) : Custom String(""))), Null, Right, 100, Null, Global.Config[56], Null, Visible To and String,
 			Default Visibility);
 		Create HUD Text(Filtered Array(Global.ShowHotKeyPlayers, Current Array Element.freeMode || Current Array Element.finished), Null, Custom String("{0}\n{1}", Custom String("{0}", Hero(
 			Mercy)) == Custom String("메르시") ? Custom String("앞으로 텔포 : Hold {0}\n{1}", Input Binding String(Button(Reload)), Custom String(
@@ -3741,7 +3706,7 @@ rule("Subroutine CreateGlobalHUD")
 			Input Binding String(Button(Interact)), Input Binding String(Button(Reload))) : Custom String(""))))), Custom String(
 			"－－－－－－－－－－－－－－－－{0}", String Length(Input Binding String(Button(Interact))) > 1 ? (String Length(Input Binding String(Button(
 			Interact))) > 3 ? (String Length(Input Binding String(Button(Interact))) > 5 ? Custom String("－－－－－－") : Custom String("－－－"))
-			: Custom String("－－")) : Custom String(""))), Null, Right, 101, Null, Custom Color(224, 204, 255, 150), Null,
+			: Custom String("－－")) : Custom String(""))), Null, Right, 101, Null, Global.Config[57], Null,
 			Visible To and String, Default Visibility);
 		Create HUD Text(Filtered Array(Global.ShowHotKeyPlayers, !Global.EditMode || Current Array Element != Host Player), Null, Custom String("{0}\n{1}", Custom String("{0}", Hero(Mercy))
 			== Custom String("메르시") ? Custom String("다음 레벨 : {0} + {1} + {2}", Input Binding String(Button(Ability 2)),
@@ -3756,12 +3721,12 @@ rule("Subroutine CreateGlobalHUD")
 			Custom String("{0} + {1}", Input Binding String(Button(Melee)), Input Binding String(Button(Secondary Fire)))))),
 			Custom String("－－－－－－－－－－－－－－－－{0}", String Length(Input Binding String(Button(Interact))) > 1 ? (String Length(
 			Input Binding String(Button(Interact))) > 3 ? (String Length(Input Binding String(Button(Interact))) > 5 ? Custom String(
-			"－－－－－－") : Custom String("－－－")) : Custom String("－－")) : Custom String(""))), Null, Right, 102, Null, Custom Color(209, 179, 255, 255), Null,
+			"－－－－－－") : Custom String("－－－")) : Custom String("－－")) : Custom String(""))), Null, Right, 102, Null, Global.Config[58], Null,
 			Visible To and String, Default Visibility);
 		If(!Global.EditMode);
 			Create HUD Text(All Players(All Teams), Null, Custom String("{0} {1}", Ability Icon String(Hero(Mercy), Button(Ultimate)),
 				Custom String("made with a modified version of peace's editor [???] {0}", Ability Icon String(Hero(Mercy),
-				Button(Ultimate)))), Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), Left, -999, Null, Custom Color(224, 204, 255, 200), Null, Visible To and String, Default Visibility);
+				Button(Ultimate)))), Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"), Left, -999, Null, Custom Color(Global.Config[52][0], Global.Config[52][1], Global.Config[52][2], 255), Null, Visible To and String, Default Visibility);
 			"TOP5"
 			Create HUD Text(Global.Top5 ? All Players(All Teams) : Null, Null, Custom String("－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－"),
 				Global.Config[24] ? Global.Config[24] : Custom String("Today's Top {0}", Count Of(Global.Top5)), Left, -991, Null, Null,
@@ -3811,8 +3776,8 @@ rule("Subroutine CreateGlobalHUD")
 				"\nSelect Point | Rez + Melee + Prim. / Secon. Fire{0}", 
                 Custom String("\nRestart | Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
                 : Custom String("Ultimate"))), Custom String("Create Enemy | Melee + Primary Fire [GUN]\nDelete Enemy | Melee + Secondary Fire [GUN]{0}", 
-                Custom String("\nCreate Refresh Bot | Ability 2 + Melee [STAFF]\nDelete Refresh Bot | Ability 2 + Melee [GUN]{0}", 
-                Custom String("\nResurrect Bot | Interact + Reload"))), Custom String("REZ on goal | Interact + Reload\nBot crouching | Melee + Rez{0}",
+                Custom String("\nCreate Refresh Bot | Melee + Primary Fire [STAFF]\nDelete Refresh Bot | Melee + Secondary Fire [STAFF]{0}", 
+                Custom String("\nResurrect Bot | Interact + Reload\nBot crouching | Melee + Rez"))), Custom String("REZ on goal | Interact + Reload\nBot crouching | Melee + Rez{0}",
 				Custom String("\nFree walking | Interact + Resurrect\nSwitch Crouch | Interact + Crouch{0}", 
 				Custom String("\nUnlimited Ga | Interact + Ultimate\nSwitch Teleport | Interact + Jump{0}", 
 				Custom String("\nAdjust Radius | Jump + Melee + Prim. / Secon. Fire [GUN]")))))[Host Player.editMode], 
@@ -3858,7 +3823,8 @@ rule("Subroutine CreateGlobalHUD")
 				"√") : Custom String("×"), Custom String("Resurrection refresh GA : {0}\n{1}",
 				Host Player.checkpointA[9][3] && Host Player.checkpointA[9][4] ? Custom String("√")
 				: Custom String("×"), Custom String("KILL REFRESH GA : {0}\n{1}", Host Player.checkpointA[9][1] ? Custom String("√")
-				: Custom String("×"), Custom String("POSITION : {0}", Host Player.checkpointA[9][0]))))),
+				: Custom String("×"), Custom String("BOT CROUCH : {0}\n{1}", Host Player.checkpointA[9][5] ? Custom String("√")
+				: Custom String("×"), Custom String("POSITION : {0}", Host Player.checkpointA[9][0])))))),
 				Host Player.checkpointA[9][0] - Vector(0, 0.8, 0), 1.05, Do Not Clip, Visible To Position and String, Color(Red),
 				Default Visibility);
 			Create Effect(Count Of(Host Player.currentSphere) > 0 && Host Player.editMode == 3 ? All Players(All Teams) : Null, Orb, Color(
@@ -3937,11 +3903,8 @@ rule("Subroutine CreatePlayerHUDAndEffects")
 				? Custom String("          失误: {0} 次\n　　　　　　　　　　时间: {1} 秒", Event Player.cheat ? Custom String("∞") : Event Player.mistake,
 				Event Player.cheat ? Custom String("∞") : Event Player.time) : Custom String(
 				"           Mistakes: {0} Times\n           Time: {1} Seconds", Event Player.cheat ? Custom String("∞") : Event Player.mistake,
-				Event Player.cheat ? Custom String("∞") : Event Player.time)), Null, Right, 1, Null, Custom Color(240, 230, 255, 255), Null, Visible To and String,
+				Event Player.cheat ? Custom String("∞") : Event Player.time)), Null, Right, 1, Null, Global.Config[53], Null, Visible To and String,
 				Default Visibility);
-			Create HUD Text(Event Player.finished ? Event Player : Null, Null, Null, Custom String("  {0} {1}", Hero Icon String(
-				All Heroes[Event Player.chooseHero]), Custom String("{0} {1} - {2}", String("Hero"), Event Player.chooseHero + 1,
-				All Heroes[Event Player.chooseHero])), Right, 5, Null, Null, Custom Color(240, 230, 255, 255), Visible To and String, Default Visibility);
 			Create HUD Text(Event Player.finished ? Event Player : Null, Null, Custom String("{0}", Hero(Mercy)) == Custom String("메르시")
 				? Custom String("        Voice: {0}{1}  {2}", Event Player.voice, Event Player.voice % 1 == 0 ? Custom String(".00")
 				: Custom String(""), Custom String("Trajectory: {0}{1}\r\n{2}", Event Player.projectile / 100,
@@ -3958,7 +3921,7 @@ rule("Subroutine CreatePlayerHUDAndEffects")
 				Event Player.projectile / 100, Event Player.projectile % 100 == 0 ? Custom String(".00") : Custom String(""), Custom String(
 				"        Body size: {0}{1}  {2}", Event Player.bodySize, Event Player.bodySize % 1 == 0 ? Custom String(".00") : Custom String(
 				""), Custom String("Barrier: {0}{1}\n ", Event Player.barrierSize, Event Player.barrierSize % 1 == 0 ? Custom String(".00")
-				: Custom String("")))))), Null, Right, 6, Custom Color(224, 204, 255, 255), Custom Color(224, 204, 255, 255), Custom Color(224, 204, 255, 255), Visible To and String, Default Visibility);
+				: Custom String("")))))), Null, Right, 6, Global.Config[54], Global.Config[54], Global.Config[54], Visible To and String, Default Visibility);
 		End;
 			Create In-World Text(Event Player.checkpointB[0] ? Event Player : Null,
 				Global.Config[2], Event Player.checkpointB[0] + Vector(0, 0.200, 0),
@@ -4049,7 +4012,7 @@ rule("Subroutine  SetCurrentAbilities")
 	actions
 	{
 		"***original editor credit to peace (T6QQT)***"
-		If(Event Player.checkpointA[2]);
+		If(Event Player.checkpointA[2] || (Global.EditMode && Count Of(Global.Checkpoint) == 0));
 			Allow Button(Event Player, Button(Crouch));
 		Else;
 			Disallow Button(Event Player, Button(Crouch));
