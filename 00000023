@@ -1242,6 +1242,8 @@ rule("switch extra section + switch refresh section + swap back - maylanix ^-^")
                 Call Subroutine(TeleportBotTokillRefreshPosition);
 			    If(!Event Player.checkpointA[9][3]);
 				    Resurrect(Event Player.targetBot);
+				Else;
+					Kill(Event Player.targetBot, Null);
 			    End;
             End;
         End;
@@ -1763,6 +1765,7 @@ rule("Kill bot")
 	{
 		Event Player.numberOfNeedResurrect != 0;
 		Is Alive(Event Player.targetBot) == True;
+		Event Player.checkpointA[3][1] == True;
 		((Event Player.killTargetBot && (Event Player.freeMode || Event Player.finished)) || (
 			Event Player.ability2 && !Event Player.freeMode && !Event Player.finished)) == True;
 	}
