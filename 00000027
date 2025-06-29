@@ -4275,7 +4275,7 @@ rule("Subroutine EnableAllAbilities")
 	actions
 	{
 		"***original editor credit to peace (T6QQT)***"
-		Allow Button(Event Player, Button(Crouch));
+		Set Crouch Enabled(Event Player, True);
 		Set Ability 1 Enabled(Event Player, True);
 		Set Ability 2 Enabled(Event Player, True);
 		Set Ultimate Ability Enabled(Event Player, True);
