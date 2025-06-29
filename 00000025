@@ -1766,8 +1766,8 @@ rule("Kill bot")
 		Event Player.numberOfNeedResurrect != 0;
 		Is Alive(Event Player.targetBot) == True;
 		Event Player.checkpointA[3][1] == True;
-		((Event Player.killTargetBot && (Event Player.freeMode || Event Player.finished)) || (
-			Event Player.ability2 && !Event Player.freeMode && !Event Player.finished)) == True;
+		Event Player.editMode != 6;
+		((Event Player.freeMode || Event Player.finished) || (Event Player.ability2 && !Event Player.freeMode && !Event Player.finished)) == True;
 	}
 
 	actions
@@ -4060,6 +4060,7 @@ rule("Subroutine TeleportCurrentBot")
 			Teleport(Event Player.enmy, Nearest Walkable Position(Vector(-500, -500, -500)));
 		End;
 		Resurrect(!Is Alive(Event Player.targetBot) && !Event Player.checkpointA[3][1] ? Event Player.targetBot : Null);
+		Kill(Is Alive(Event Player.targetBot) && Event Player.checkpointA[3][1] ? Event Player.targetBot : Null, Null);
         Wait(0.016, Ignore Condition);
 		Start Holding Button(Event Player.checkpointA[12] ? Event Player.targetBot : Null, Button(Crouch));
 		Stop Holding Button(!Event Player.checkpointA[12] ? Event Player.targetBot : Null, Button(Crouch));
