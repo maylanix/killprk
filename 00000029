@@ -2324,7 +2324,7 @@ rule("Elastic cloud effect, clz bounce")
 	actions
 	{
 		"***original editor credit to peace (T6QQT)***"
-		Apply Impulse(Event Player, Up, Event Player.checkpointA[8][1], To World, Cancel Contrary Motion);
+		Apply Impulse(Event Player, Event Player.checkpointA[8][1] >= 0 ? Up : Velocity Of(Event Player), Event Player.checkpointA[8][1] >= 0 ? Event Player.checkpointA[8][1] : Event Player.checkpointA[8][1] - Event Player.checkpointA[8][1] * 2, To World, Cancel Contrary Motion);
 		Play Effect(Event Player, Baptiste Biotic Launcher Explosion Sound, Null, Event Player, 80);
 	}
 }
@@ -3785,8 +3785,9 @@ rule("Subroutine CreateGlobalHUD")
 				Default Visibility);
 			"clz text in edit mode"
 			Create In-World Text(Host Player.checkpointA[8] && Host Player.editMode == 4 ? All Players(All Teams) : Null,
-				Custom String("LEVEL : {0}\n{1}", Host Player.checkpointA[8][1], Custom String("DISTANCE : {0}\n{1}",
-				Distance Between(Host Player, Host Player.checkpointA[8][0]),
+				Custom String("LEVEL {0}\n{1}", Host Player.checkpointA[8][1] >= 0 ? 
+				Custom String("(Up) : {0}", Host Player.checkpointA[8][1]) : Custom String("(Forward) : {0}", Host Player.checkpointA[8][1] - Host Player.checkpointA[8][1] * 2), 
+				Custom String("DISTANCE : {0}\n{1}", Distance Between(Host Player, Host Player.checkpointA[8][0]),
 				Custom String("POSITION : {0}", Host Player.checkpointA[8][0]))), Host Player.checkpointA[8][0] + Vector(0, 0.500, 0), 1.200,
 				Do Not Clip, Visible To Position and String, Color(Rose), Default Visibility);
 		End;
