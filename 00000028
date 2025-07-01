@@ -105,10 +105,8 @@ variables
 		17: rezonpoint
 		18: bkey
 		19: rkey
-		20: ChooseCloudPosition
 		21: CurrentChooseOrb
 		22: CurrentChooseSphere
-		23: CurrentChooseCloud
 		24: TempArray
 		26: Once
 		27: NumberOfUsedEntity
@@ -147,7 +145,6 @@ variables
 		6: time
 		7: mistake
 		8: sphereEffects
-		9: cloudEffects
         10: enmy
 		11: displayedCheckpoint
 		14: bestRecord
@@ -172,7 +169,7 @@ variables
 		36: checkpointA
 		37: checkpointB
 		38: currentCheckpoint
-		39: currentCloud
+		39: cloudcreated
 		40: currentSphere
 		41: currentOrb
 		42: orbEffects
@@ -627,7 +624,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 				"0, checkponit position\n1, checkpoint radius\n2, crouch\n3, bot, default empty array(BotVector, NeedResurrect, RefreshAbility1)\n4, unlimited ga\n5, teleport, defalut false\n6, orb, default empty array\n7, sphere, default empty array\n8, cloud, default empty array"
 				Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh, False), Global.rezonpoint, Global.freewalk, False);
+			Empty Array, Array(False, False), Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh, False), Global.rezonpoint, Global.freewalk, False);
                 "9, enemy bot, default empty array(botvector, refreshability1 on kill, refresh vector)"
 				Event Player.checkpoint = Count Of(Global.Checkpoint) - 1;
 				Call Subroutine(GetCurrentCheckpoint);
@@ -667,6 +664,7 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 				Call Subroutine(GetCurrentCheckpoint);
 				Call Subroutine(CreateNewEffect);
 				Small Message(All Players(All Teams), Custom String("   New sphere created"));
+			"clz create"
 			Else If(Event Player.editMode == 4);
 				Call Subroutine(ErrorWarningMsg);
 				If(Global.Error);
@@ -674,14 +672,13 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 					Abort;
 				End;
 				"0, cloud position\n1, cloud level"
-				Event Player.currentCloud[Count Of(Event Player.currentCloud)] = Array(Position Of(Event Player), 8);
-				Global.CurrentChooseCloud = Count Of(Event Player.currentCloud) - 1;
-				Global.ChooseCloudPosition = Event Player.currentCloud[Global.CurrentChooseCloud][0];
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 8 ? Event Player.currentCloud : Current Array Element);
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 8 ? Array(Position Of(
+		    		Event Player), 8) : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
-				Call Subroutine(CreateNewEffect);
-				Small Message(All Players(All Teams), Custom String("   New cloud created"));
+				If(!Event Player.cloudcreated);
+					Call Subroutine(CreateNewEffect);
+				End;
+				Small Message(All Players(All Teams), Custom String("   Cloud created/moved"));
 			End;
 			Play Effect(Event Player, Buff Impact Sound, Null, Event Player.editMode != 7 ? Event Player : Null, 100);
 		Else If(Weapon(Event Player) == 2);
@@ -745,21 +742,16 @@ rule("create / delete checkpoint, orb, sphere, cloud")
 					Current Array Index == 7 ? Event Player.currentSphere : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
 				Small Message(All Players(All Teams), Custom String("   The selected sphere has been deleted"));
+			"clz delete"
 			Else If(Event Player.editMode == 4);
 				Call Subroutine(ErrorWarningMsg);
 				If(Global.Error);
 					Global.Error = False;
 					Abort;
 				End;
-				Modify Player Variable(Event Player, currentCloud, Remove From Array By Index, Global.CurrentChooseCloud);
-				Destroy Effect(Event Player.cloudEffects[Global.CurrentChooseCloud]);
-				Modify Player Variable(Event Player, cloudEffects, Remove From Array By Index, Global.CurrentChooseCloud);
-				Global.CurrentChooseCloud -= Global.CurrentChooseCloud > 0 ? 1 : 0;
-				Global.ChooseCloudPosition = Event Player.currentCloud[Global.CurrentChooseCloud][0];
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 8 ? Event Player.currentCloud : Current Array Element);
+				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, Current Array Index == 8 ? Array(False, False) : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
-				Small Message(All Players(All Teams), Custom String("   The selected cloud has been deleted"));
+				Small Message(All Players(All Teams), Custom String("   Cloud deleted"));
 			End;
 			Play Effect(Event Player, Debuff Impact Sound, Null, Event Player.editMode != 7 ? Event Player : Null, 100);
 		End;
@@ -832,7 +824,7 @@ rule("Insert point")
 		Global.Checkpoint = Array Slice(Global.Checkpoint, 0, Event Player.checkpoint + 1);
 		Global.Checkpoint[Count Of(Global.Checkpoint)] = Array(Position Of(Event Player), Global.NewCheckpointDefaultRadius,
 			Global.NewCheckpointDefaultCtrl, Array(False, False, Global.rezrefresh), Global.NewCheckpointDefaultMaxRefresh, False, Empty Array,
-			Empty Array, Empty Array, Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh, False), Global.rezonpoint, Global.freewalk, False);
+			Empty Array, Array(False, False), Array(False, Global.enmyrfdefault, False, False, Global.rezrefresh, False), Global.rezonpoint, Global.freewalk, False);
 		Modify Global Variable(Checkpoint, Append To Array, Global.TempArray);
 		Event Player.checkpoint += 1;
 		Call Subroutine(GetCurrentCheckpoint);
@@ -1039,14 +1031,6 @@ rule("Choose checkpoint, orb, sphere, cloud")
 			Else If(Is Button Held(Event Player, Button(Secondary Fire)) && Global.CurrentChooseSphere > 0);
 				Global.CurrentChooseSphere -= 1;
 				Global.ChooseSpherePosition = Event Player.currentSphere[Global.CurrentChooseSphere][0];
-			End;
-		Else If(Event Player.editMode == 4 && Count Of(Event Player.currentCloud) > 1);
-			If(Is Button Held(Event Player, Button(Primary Fire)) && Global.CurrentChooseCloud < Count Of(Event Player.currentCloud) - 1);
-				Global.CurrentChooseCloud += 1;
-				Global.ChooseCloudPosition = Event Player.currentCloud[Global.CurrentChooseCloud][0];
-			Else If(Is Button Held(Event Player, Button(Secondary Fire)) && Global.CurrentChooseCloud > 0);
-				Global.CurrentChooseCloud -= 1;
-				Global.ChooseCloudPosition = Event Player.currentCloud[Global.CurrentChooseCloud][0];
 			End;
 		End;
 	}
@@ -1301,13 +1285,14 @@ rule("Modify the size of the checkpoint / sphere / cloud")
 				Call Subroutine(GetCurrentCheckpoint);
 				Call Subroutine(CreateNewEffect);
 				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
-			Else If(Event Player.editMode == 4 && Count Of(Event Player.currentCloud) > 0);
-				Event Player.currentCloud[Global.CurrentChooseCloud] = Mapped Array(Event Player.currentCloud[Global.CurrentChooseCloud],
+			"clz level +"
+			Else If(Event Player.editMode == 4 && Event Player.checkpointA[8]);
+				Event Player.checkpointA[8] = Mapped Array(Event Player.checkpointA[8],
 					Current Array Index == 1 ? Current Array Element + 1 : Current Array Element);
 				Wait(0.100, Ignore Condition);
 				Loop If Condition Is True;
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 8 ? Event Player.currentCloud : Current Array Element);
+                Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, 
+					Current Array Index == 8 ? Event Player.checkpointA[8] : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
 				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 			End;
@@ -1337,14 +1322,14 @@ rule("Modify the size of the checkpoint / sphere / cloud")
 				Call Subroutine(GetCurrentCheckpoint);
 				Call Subroutine(CreateNewEffect);
 				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
-			Else If(Event Player.editMode == 4 && Count Of(Event Player.currentCloud)
-					> 0 && Event Player.currentCloud[Global.CurrentChooseCloud][1] > 1);
-				Event Player.currentCloud[Global.CurrentChooseCloud] = Mapped Array(Event Player.currentCloud[Global.CurrentChooseCloud],
+			"clz level -"
+			Else If(Event Player.editMode == 4 && Event Player.checkpointA[8]);
+				Event Player.checkpointA[8] = Mapped Array(Event Player.checkpointA[8],
 					Current Array Index == 1 ? Current Array Element - 1 : Current Array Element);
 				Wait(0.100, Ignore Condition);
 				Loop If Condition Is True;
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 8 ? Event Player.currentCloud : Current Array Element);
+                Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA, 
+					Current Array Index == 8 ? Event Player.checkpointA[8] : Current Array Element);
 				Call Subroutine(GetCurrentCheckpoint);
 				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
 			End;
@@ -1412,25 +1397,6 @@ rule("Move Sphere / Cloud")
 				Call Subroutine(GetCurrentCheckpoint);
 				Call Subroutine(CreateNewEffect);
 				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
-			Else If(Event Player.editMode == 4 && Count Of(Event Player.currentCloud) > 0);
-				If(Global.Once);
-					Call Subroutine(EditChoosedEffect);
-					Global.Once = False;
-				End;
-				Chase Global Variable At Rate(ChooseCloudPosition, Eye Position(Event Player) + Facing Direction Of(Event Player) * (
-					Distance Between(Position Of(Event Player), Global.ChooseCloudPosition) + 10), 1, Destination and Rate);
-				Wait(0.016, Ignore Condition);
-				Loop If Condition Is True;
-				Stop Chasing Global Variable(ChooseCloudPosition);
-				Global.Once = True;
-				Event Player.currentCloud[Global.CurrentChooseCloud] = Mapped Array(Event Player.currentCloud[Global.CurrentChooseCloud],
-					Current Array Index == 0 ? Global.ChooseCloudPosition : Current Array Element);
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 8 ? Event Player.currentCloud : Current Array Element);
-				Call Subroutine(GetCurrentCheckpoint);
-				Call Subroutine(CreateNewEffect);
-				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
-			End;
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
 			If(Event Player.editMode == 2 && Count Of(Event Player.currentOrb) > 0);
 				If(Global.Once);
@@ -1468,25 +1434,6 @@ rule("Move Sphere / Cloud")
 				Call Subroutine(GetCurrentCheckpoint);
 				Call Subroutine(CreateNewEffect);
 				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
-			Else If(Event Player.editMode == 4 && Count Of(Event Player.currentCloud) > 0);
-				If(Global.Once);
-					Call Subroutine(EditChoosedEffect);
-					Global.Once = False;
-				End;
-				Chase Global Variable At Rate(ChooseCloudPosition, Eye Position(Event Player) - Facing Direction Of(Event Player) * (
-					Distance Between(Position Of(Event Player), Global.ChooseCloudPosition) + 10), 1, Destination and Rate);
-				Wait(0.016, Ignore Condition);
-				Loop If Condition Is True;
-				Stop Chasing Global Variable(ChooseCloudPosition);
-				Global.Once = True;
-				Event Player.currentCloud[Global.CurrentChooseCloud] = Mapped Array(Event Player.currentCloud[Global.CurrentChooseCloud],
-					Current Array Index == 0 ? Global.ChooseCloudPosition : Current Array Element);
-				Global.Checkpoint[Event Player.checkpoint] = Mapped Array(Event Player.checkpointA,
-					Current Array Index == 8 ? Event Player.currentCloud : Current Array Element);
-				Call Subroutine(GetCurrentCheckpoint);
-				Call Subroutine(CreateNewEffect);
-				Play Effect(Event Player, Buff Explosion Sound, Null, Event Player, 100);
-			End;
 		End;
 	}
 }
@@ -2357,7 +2304,7 @@ rule("Obstacle Sphere effect")
 	}
 }
 
-rule("Elastic cloud effect")
+rule("Elastic cloud effect, clz bounce")
 {
 	event
 	{
@@ -2368,17 +2315,16 @@ rule("Elastic cloud effect")
 
 	conditions
 	{
-		Event Player.currentCloud != Empty Array;
+		Event Player.checkpointA[8] == True;
 		Event Player.checkpointA == True;
 		(Altitude Of(Event Player) >= 0.030 || Is On Ground(Event Player)) == True;
-		Is True For Any(Event Player.currentCloud, Distance Between(Event Player, Current Array Element[0]) <= 1.500) == True;
+		Distance Between(Event Player, Event Player.checkpointA[8][0]) <= 1.500;
 	}
 
 	actions
 	{
 		"***original editor credit to peace (T6QQT)***"
-		Apply Impulse(Event Player, Up, First Of(Filtered Array(Event Player.currentCloud, Distance Between(Event Player,
-			Current Array Element[0]) <= 1.500))[1], To World, Cancel Contrary Motion);
+		Apply Impulse(Event Player, Up, Event Player.checkpointA[8][1], To World, Cancel Contrary Motion);
 		Play Effect(Event Player, Baptiste Biotic Launcher Explosion Sound, Null, Event Player, 80);
 	}
 }
@@ -3109,7 +3055,8 @@ rule("Subroutine ErrorWarningmsgs")
 			Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 			Global.Error = True;
 		Else If(Is Button Held(Event Player, Button(Primary Fire)));
-			If(Count Of(Event Player.currentSphere) + Count Of(Event Player.currentCloud) + Count Of(Event Player.currentOrb) * 2 + Count Of(
+			"clz"
+			If(Count Of(Event Player.currentSphere) + Event Player.checkpointA[8] ? 1 : 0 + Count Of(Event Player.currentOrb) * 2 + Count Of(
 				Filtered Array(Event Player.currentOrb, Current Array Element[1])) * 2 >= Round To Integer((256 - Global.NumberOfUsedEntity)
 				/ Number Of Slots(All Teams), Down));
 				Small Message(Event Player, Custom String("   The available effects of this level have reached the upper limit"));
@@ -3133,7 +3080,8 @@ rule("Subroutine ErrorWarningmsgs")
 				Small Message(Event Player, Custom String("   There is no sphere yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 				Global.Error = True;
-			Else If(Event Player.editMode == 4 && Count Of(Event Player.currentCloud) == 0);
+			"clz error"
+			Else If(Event Player.editMode == 4 && !Event Player.checkpointA[8]);
 				Small Message(Event Player, Custom String("   There is no cloud yet"));
 				Play Effect(Event Player, Explosion Sound, Null, Event Player, 100);
 				Global.Error = True;
@@ -3246,10 +3194,10 @@ rule("Subroutine  CreateNewEffect")
 			Create Effect(Event Player, Sphere, Global.Config[40], Event Player.currentSphere[Global.CurrentChooseSphere][0],
 				Event Player.currentSphere[Global.CurrentChooseSphere][1], None);
 			Event Player.sphereEffects[Global.CurrentChooseSphere] = Last Created Entity;
+		"clz create effect"
 		Else If(Event Player.editMode == 4);
-			Destroy Effect(Event Player.cloudEffects[Global.CurrentChooseCloud]);
-			Create Effect(Event Player, Cloud, Global.Config[41], Event Player.currentCloud[Global.CurrentChooseCloud][0], 1, None);
-			Event Player.cloudEffects[Global.CurrentChooseCloud] = Last Created Entity;
+			Create Effect(Event Player.checkpointA[8] ? Event Player : Null, Cloud, Global.Config[41], Event Player.checkpointA[8][0], 1, Visible To Position Radius and Color);
+			Event Player.cloudcreated = Last Created Entity;
 		End;
 	}
 }
@@ -3296,10 +3244,6 @@ rule("Subroutine  EditChoosedEffect")
 			Create Effect(Event Player, Sphere, Global.Config[40], Global.ChooseSpherePosition,
 				Event Player.currentSphere[Global.CurrentChooseSphere][1], Position and Radius);
 			Event Player.sphereEffects[Global.CurrentChooseSphere] = Last Created Entity;
-		Else If(Event Player.editMode == 4);
-			Destroy Effect(Event Player.cloudEffects[Global.CurrentChooseCloud]);
-			Create Effect(Event Player, Cloud, Global.Config[41], Global.ChooseCloudPosition, 1, Position and Radius);
-			Event Player.cloudEffects[Global.CurrentChooseCloud] = Last Created Entity;
 		End;
 	}
 }
@@ -3394,7 +3338,6 @@ rule("Subroutine ClearRedundantData")
 		Global.ChooseSpherePosition = Null;
 		Global.allybot = Null;
 		Global.allyname = Null;
-		Global.ChooseCloudPosition = Null;
 		Global.TipHudSpaceHolder = Null;
 		Global.Vips = Null;
 		Global.PlayersRecord = Null;
@@ -3411,7 +3354,6 @@ rule("Subroutine ClearRedundantData")
 		Global.BotGravity = Null;
 		Global.CurrentChooseOrb = Null;
 		Global.CurrentChooseSphere = Null;
-		Global.CurrentChooseCloud = Null;
 		Global.NewCheckpointDefaultCtrl = Null;
 		Global.NewCheckpointDefaultRadius = Null;
         Global.enmybot = Null;
@@ -3547,7 +3489,6 @@ rule("Subroutine  InitializePlayerVariables")
 			Event Player.projectile = 100;
 			Event Player.currentOrb = Empty Array;
 			Event Player.currentSphere = Empty Array;
-			Event Player.currentCloud = Empty Array;
 			Event Player.playerTittle = First Of(Filtered Array(Global.Vips, Current Array Element[0] == Custom String("{0}", Event Player)));
 			Event Player.playerNickname = Event Player.playerTittle ? (
 				Event Player.playerTittle[1] ? Event Player.playerTittle[1] : Custom String("{0}", Event Player)) : Custom String("{0}",
@@ -3775,10 +3716,10 @@ rule("Subroutine CreateGlobalHUD")
 				"\nMove Position | Reload + Primary / Secondary Fire\nCreate Bot | Melee + Primary Fire\nDelete Bot | Melee + Secondary Fire{0}",
 				Custom String("\nResurrect Bot | Interact + Melee\nRefresh GA after REZ | Interact + Ability 1{0}", Custom String("\nDelete Orb | Interact + Secondary Fire [GUN]")))),
 				Custom String("Create Sphere | Interact + Primary Fire\nSelect Sphere | Rez + Primary / Secondary Fire{0}", Custom String(
-				"\nMove Position | Reload + Primary / Secondary Fire\nAdjust Level | Jump + Melee + Primary / Secondary Fire{0}", Custom String(
-				"\nDelete Sphere | Interact + Secondary Fire [GUN]"))), Custom String(
-				"Create Cloud | Interact + Primary Fire\nSelect Cloud | Rez + Primary / Secondary Fire{0}", Custom String(
 				"\nMove Position | Reload + Primary / Secondary Fire\nAdjust Radius | Jump + Melee + Primary / Secondary Fire{0}", Custom String(
+				"\nDelete Sphere | Interact + Secondary Fire [GUN]"))), Custom String(
+				"Create/Move Cloud | Interact + Primary Fire{0}", Custom String(
+				"\nAdjust Level | Jump + Melee + Primary / Secondary Fire{0}", Custom String(
 				"\nDelete Cloud | Interact + Secondary Fire [GUN]"))), Custom String(
 				"\nSelect Point | Rez + Melee + Prim. / Secon. Fire{0}", 
                 Custom String("\nRestart | Interact + {0}", Global.rkey == 1 ? Custom String("Rez + Crouch") 
@@ -3842,12 +3783,11 @@ rule("Subroutine CreateGlobalHUD")
 				- Host Player.currentSphere[Global.CurrentChooseSphere][0], Custom String("POSITION : {0}", Global.ChooseSpherePosition))),
 				Global.ChooseSpherePosition + Vector(0, 0.500, 0), 1.200, Do Not Clip, Visible To Position and String, Color(Rose),
 				Default Visibility);
-			Create Effect(Count Of(Host Player.currentCloud) > 0 && Host Player.editMode == 4 ? All Players(All Teams) : Null, Good Aura,
-				Color(Rose), Global.ChooseCloudPosition, 1.300, Visible To Position and Radius);
-			Create In-World Text(Count Of(Host Player.currentCloud) > 0 && Host Player.editMode == 4 ? All Players(All Teams) : Null,
-				Custom String("LEVEL : {0}\n{1}", Host Player.currentCloud[Global.CurrentChooseCloud][1], Custom String("DISTANCE : {0}\n{1}",
-				Distance Between(Host Player, Global.ChooseCloudPosition) - Host Player.currentCloud[Global.CurrentChooseCloud][0],
-				Custom String("POSITION : {0}", Global.ChooseCloudPosition))), Global.ChooseCloudPosition + Vector(0, 0.500, 0), 1.200,
+			"clz text in edit mode"
+			Create In-World Text(Host Player.checkpointA[8] && Host Player.editMode == 4 ? All Players(All Teams) : Null,
+				Custom String("LEVEL : {0}\n{1}", Host Player.checkpointA[8][1], Custom String("DISTANCE : {0}\n{1}",
+				Distance Between(Host Player, Host Player.checkpointA[8][0]),
+				Custom String("POSITION : {0}", Host Player.checkpointA[8][0]))), Host Player.checkpointA[8][0] + Vector(0, 0.500, 0), 1.200,
 				Do Not Clip, Visible To Position and String, Color(Rose), Default Visibility);
 		End;
 	}
@@ -4004,7 +3944,6 @@ rule("Subroutine GetCurrentCheckpoint")
 		Event Player.currentOrb = Event Player.checkpointA[6];
 		Event Player.tempCurrentOrb = Event Player.currentOrb;
 		Event Player.currentSphere = Event Player.checkpointA[7];
-		Event Player.currentCloud = Event Player.checkpointA[8];
 	}
 }
 
@@ -4139,16 +4078,6 @@ rule("Subroutine  CreateCurrentEffects")
 		End;
 		Destroy Effect(Event Player.sphereEffects);
 		Event Player.sphereEffects = Empty Array;
-		Destroy Effect(Event Player.cloudEffects);
-		Event Player.cloudEffects = Empty Array;
-		If(Global.EditMode && Event Player == Host Player);
-			Global.CurrentChooseOrb = 0;
-			Global.ChooseOrbPosition = Event Player.currentOrb[Global.CurrentChooseOrb][0];
-			Global.CurrentChooseSphere = 0;
-			Global.ChooseSpherePosition = Event Player.currentSphere[Global.CurrentChooseSphere][0];
-			Global.CurrentChooseCloud = 0;
-			Global.ChooseCloudPosition = Event Player.currentCloud[Global.CurrentChooseCloud][0];
-		End;
 		For Player Variable(Event Player, i, 0, Count Of(Event Player.currentOrb), 1);
 			If(Event Player.currentOrb[Event Player.i][1]);
 				Create Icon(Is True For Any(Event Player.tempCurrentOrb, Current Array Element[0] == Evaluate Once(
@@ -4188,10 +4117,6 @@ rule("Subroutine  CreateCurrentEffects")
 			Create Effect(Event Player, Sphere, Global.Config[40], Event Player.currentSphere[Event Player.i][0],
 				Event Player.currentSphere[Event Player.i][1], Visible To);
 			Event Player.sphereEffects[Event Player.i] = Last Created Entity;
-		End;
-		For Player Variable(Event Player, i, 0, Count Of(Event Player.currentCloud), 1);
-			Create Effect(Event Player, Cloud, Global.Config[41], Event Player.currentCloud[Event Player.i][0], 1, Visible To);
-			Event Player.cloudEffects[Event Player.i] = Last Created Entity;
 		End;
 	}
 }
