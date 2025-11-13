@@ -145,6 +145,8 @@ variables
 		8: spherecreated
         10: enmy
 		11: displayedCheckpoint
+		12: pbkey
+		13: prkey
 		14: bestRecord
 		15: playerData
 		16: tempCurrentOrb
@@ -221,7 +223,7 @@ subroutines
 	30: CreatePlayerEnemyBot
 }
 
-rule("<fgffb3b3ff>welcome to my mercy kill parkour editor - maylanix ♡ (read me)")
+rule("welcome to my mercy kill parkour editor - maylanix ♡ (read me)")
 {
     event
     {
@@ -241,7 +243,7 @@ rule("<fgffb3b3ff>welcome to my mercy kill parkour editor - maylanix ♡ (read m
     }
 }
 
-rule("<fgffb3b3ff>♡ ##—— paste checkpoint data here ——> ♡")
+rule("♡ ##—— paste checkpoint data here ——> ♡")
 {
 	event
 	{
@@ -249,7 +251,7 @@ rule("<fgffb3b3ff>♡ ##—— paste checkpoint data here ——> ♡")
 	}
 }
 
-rule("<fgffb3b3ff>♡ ##—— username, code + difficulty ——> ♡")
+rule("♡ ##—— username, code + difficulty ——> ♡")
 {
 	event
 	{
@@ -269,7 +271,7 @@ rule("<fgffb3b3ff>♡ ##—— username, code + difficulty ——> ♡")
 	}
 }
 
-rule("<fgffb3b3ff>♡ ##—— setup ——> ♡")
+rule("♡ ##—— setup ——> ♡")
 {
     event
     {
@@ -306,7 +308,7 @@ rule("<fgffb3b3ff>♡ ##—— setup ——> ♡")
     }
 }
 
-rule("<fgffb3b3ff>♡ ##—— personalized config ——> ♡")
+rule("♡ ##—— personalized config ——> ♡")
 {
 	event
 	{
@@ -411,7 +413,7 @@ rule("<fgffb3b3ff>♡ ##—— personalized config ——> ♡")
 	}
 }
 
-rule("<fgffb3b3ff>♡ ##—— tips ——> ♡")
+rule("♡ ##—— tips ——> ♡")
 {
 	event
 	{
@@ -426,7 +428,7 @@ rule("<fgffb3b3ff>♡ ##—— tips ——> ♡")
 }
 
 
-rule("<fgffb3b3ff>♡ ##—— in-map texts ——> ♡")
+rule("♡ ##—— in-map texts ——> ♡")
 {
 	event
 	{
@@ -440,7 +442,7 @@ rule("<fgffb3b3ff>♡ ##—— in-map texts ——> ♡")
 	}
 }
 
-rule("<fgffb3b3ff>♡ ##—— big msgs ——> ♡")
+rule("♡ ##—— big msgs ——> ♡")
 {
 	event
 	{
@@ -454,7 +456,7 @@ rule("<fgffb3b3ff>♡ ##—— big msgs ——> ♡")
 	}
 }
 
-rule("<fgffb3b3ff>♡ ##—— small msgs ——> ♡")
+rule("♡ ##—— small msgs ——> ♡")
 {
 	event
 	{
@@ -468,7 +470,7 @@ rule("<fgffb3b3ff>♡ ##—— small msgs ——> ♡")
 	}
 }
 
-rule("<fgffb3b3ff>♡ ##—— custom player titles ——> ♡")
+rule("♡ ##—— custom player titles ——> ♡")
 {
 	event
 	{
@@ -540,6 +542,8 @@ rule("Player initialization")
 		End;
 		Call Subroutine(InitializePlayerVariables);
 		Call Subroutine(ValidationPlayerData);
+		Event Player.pbkey = Global.bkey;
+		Event Player.prkey = Global.rkey;
 		Teleport(Event Player, Global.Checkpoint[Event Player.checkpoint] ? Global.Checkpoint[Event Player.checkpoint][0] : Event Player);
 		Call Subroutine(CreatePlayerTargetBot);
 		If(Event Player.checkpointA[9]);
@@ -1954,7 +1958,7 @@ rule("Back to point")
 		"***original editor credit to peace (T6QQT)***"
 		Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Reload), Button(Jump), Button(Ultimate))), Is Button Held(
 			Event Player, Current Array Element)));
-		If((Is Button Held(Event Player, Button(Reload)) && Global.bkey == 0) || Is Button Held(Event Player, Button(Ultimate)) && Global.bkey == 1);
+		If(Is Button Held(Event Player, Button(Reload)) && Event Player.pbkey == 0 || Is Button Held(Event Player, Button(Ultimate)) && Event Player.prkey == 1);
 			Call Subroutine(TeleportToCurrentCheckpoint);
 		End;
 	}
@@ -2398,7 +2402,7 @@ rule("Restart")
 		"***original editor credit to peace (T6QQT)***"
         Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Interact), Button(Ultimate), Button(Crouch), Button(Ability 2))), Is Button Held(
 				Event Player, Current Array Element)));
-		If((Is Button Held(Event Player, Button(Crouch)) && Is Button Held(Event Player, Button(Ability 2)) && Global.rkey == 1) || Is Button Held(Event Player, Button(Ultimate)) && Global.rkey == 0);
+		If((Is Button Held(Event Player, Button(Crouch)) && Is Button Held(Event Player, Button(Ability 2)) && Event Player.prkey == 1) || Is Button Held(Event Player, Button(Ultimate)) && Event Player.prkey == 0);
 			Play Effect(Event Player, Tracer Recall Disappear Sound, Null, Event Player, 200);
 			Teleport(Event Player, Global.Checkpoint[0][0]);
 			If(Is Using Ultimate(Event Player));
@@ -2923,7 +2927,7 @@ rule("cooldown instant reset <fgffb3b3ff>- maylanix, nash n hampsterman ♡</fg>
 	}
 }
 
-rule("no kill from checkpoint <fgffb3b3ff>- maylanix ♡</fg>")
+rule("no kill from checkpoint - maylanix ♡")
 {
 	event
 	{
@@ -2944,7 +2948,7 @@ rule("no kill from checkpoint <fgffb3b3ff>- maylanix ♡</fg>")
 	}
 }
 
-rule("refresh ga on kill <fgffb3b3ff>- maylanix ♡</fg>")
+rule("refresh ga on kill - maylanix ♡")
 {
     event
     {
@@ -2986,6 +2990,37 @@ rule("refresh ga on kill <fgffb3b3ff>- maylanix ♡</fg>")
 		Abort If Condition Is False;
 		Set Ability 1 Enabled(Event Player, False);
 		Event Player.used = True;
+	}
+}
+
+rule("custom player keybinds - maylanix ♡")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Interact)) == True;
+		Is Button Held(Event Player, Button(Crouch)) == True;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
+		Global.EditMode == False;
+	}
+
+	actions
+	{
+		Abort If(Is True For Any(Remove From Array(Global.buttonsArray, Array(Button(Interact), Button(Crouch), Button(Primary Fire),
+				Button(Secondary Fire))), Is Button Held(Event Player, Current Array Element)));
+		If(Is Button Held(Event Player, Button(Primary Fire)));
+			Event Player.pbkey = Event Player.pbkey == 0 ? 1 : 0;
+			Small Message(Event Player, Custom String("Reset keybinds changed to {0}", Event Player.pbkey == 0 ? Custom String("Reload") : Custom String("Ultimate")));
+		Else;
+			Event Player.prkey = Event Player.prkey == 0 ? 1 : 0;
+			Small Message(Event Player, Custom String("Restart keybinds changed to {0}", Event Player.prkey == 1 ? Custom String("Crouch + Interact + Resurrect") : Custom String("Ultimate + Interact")));
+		End;
 	}
 }
 
@@ -3577,12 +3612,12 @@ rule("Subroutine CreateGlobalHUD")
 			Global.EditMode && Local Player == Host Player ? Custom String("") : Custom String("\n　　　重新开始 | {0} + {1} + {2}",
 			Input Binding String(Button(Crouch)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Interact))))))))
 			: Custom String("Preview next point : {0} + {1}\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(
-			Secondary Fire)), Custom String("Back to point : {0}\n{1}", Global.bkey == 0 ? Input Binding String(Button(Reload)) : Input Binding String(Button(Ultimate)), Custom String(
+			Secondary Fire)), Custom String("Back to point : {0}\n{1}", Local Player.pbkey == 0 ? Input Binding String(Button(Reload)) : Input Binding String(Button(Ultimate)), Custom String(
 			"Free Mode : {0} + {1}\n{2}", Input Binding String(Button(Reload)), Input Binding String(Button(Melee)), Custom String(
 			"3rd Person : {0} + {1}\n{2}", Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2)), Custom String(
 			"Spectator Mode : {0} + {1}{2}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)),
 			Global.EditMode && Local Player == Host Player ? Custom String("") : Custom String("\nRestart : {0} + {1}{2}",
-			Global.rkey == 1 ? Input Binding String(Button(Crouch)) : Input Binding String(Button(Ultimate)), Input Binding String(Button(Interact)), Global.rkey == 1 ? 
+			Local Player.prkey == 1 ? Input Binding String(Button(Crouch)) : Input Binding String(Button(Ultimate)), Input Binding String(Button(Interact)), Local Player.prkey == 1 ? 
 			Custom String(" + {0}", Input Binding String(Button(Ability 2))) : Custom String("")))))))), Custom String("－－－－－－－－－－－－－－－－{0}",
 			String Length(Input Binding String(Button(Interact))) > 1 ? (String Length(Input Binding String(Button(Interact))) > 3 ? (
 			String Length(Input Binding String(Button(Interact))) > 5 ? Custom String("－－－－－－") : Custom String("－－－")) : Custom String(
