@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea
-title: "[Feature Request] Short description of your feature"
+title: "[Broad Keyword] Short description of your feature"
 labels: feature request
 assignees: maylanix
 
