@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "★ mercy kill parkour ★\n★ editor by maylanix ★\neditor code: ???\n\nfor any issues report them at\n  https://github.com/maylanix/killprk/issues\n\nderived from peace's editor: T6QQT"
+		Description: "★ mercy kill parkour ★\n★ editor by maylanix ★\neditor code: ???\n\nversion 00000033\n\nfor any issues report them at\n  https://github.com/maylanix/killprk/issues\n\nderived from peace's editor: T6QQT"
 		Mode Name: "[mercy kill parkour editor]"
 	}
 
@@ -241,6 +241,19 @@ rule("welcome to my mercy kill parkour editor - maylanix ♡ (read me)")
 		"***original editor credit to peace (T6QQT)***\nalso thanks to gigamercy cause i grabbed his dummy bot destroyer :)"
 		Continue;
     }
+}
+
+rule("EV; 00000033")
+{
+	 event
+    {
+        Ongoing - Global;
+    }
+
+    actions
+    {
+        Continue;
+	}
 }
 
 rule("♡ ##—— paste checkpoint data here ——> ♡")
@@ -1918,14 +1931,16 @@ rule("3rd person")
 
 	actions
 	{
-		"***original editor credit to peace (T6QQT)***"
 		Event Player.third = !Event Player.third;
 		If(Event Player.third);
 			"by overclocking"
-			Start Camera(Event Player, Ray Cast Hit Position(Event Player + Up * (Distance Between(Eye Position(Event Player), Event Player)
-				+ 0.500), Ray Cast Hit Position(Event Player + Up * (Distance Between(Eye Position(Event Player), Event Player) + 0.500),
-				Event Player + Up * (Distance Between(Eye Position(Event Player), Event Player) + 0.500) + Facing Direction Of(Event Player)
-				* -3, Null, Event Player, True), Null, Event Player, True), Event Player + Facing Direction Of(Event Player) * 100, 100);
+			Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player)
+				+ World Vector Of(Vector(-0.750, 0, 0), Event Player, Rotation) + Facing Direction Of(Event Player) * -4.300, Null,
+				Event Player, False) + Direction Towards(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player)
+				+ Facing Direction Of(Event Player) * -4.300 + World Vector Of(Vector(-0.750, 0, 0), Event Player, Rotation), Null,
+				Event Player, False), Eye Position(Event Player) + World Vector Of(Vector(-0.750, 0, 0), Event Player, Rotation)) * 0.300),
+				Update Every Frame(Eye Position(Event Player) + Facing Direction Of(Event Player) * 1000 + World Vector Of(Vector(-0.750, 0,
+				0), Event Player, Rotation)), 10000);
 			Abort If(!Event Player.third);
 			Small Message(Event Player, Custom String("3rd person enabled; press {0} + {1} to cancel", Input Binding String(Button(Reload)),
 				Input Binding String(Button(Ability 2))));
